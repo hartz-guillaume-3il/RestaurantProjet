@@ -1,6 +1,7 @@
 package model;
 
 import java.util.List;
+import state.EtatCommande;
 
 public class Commande {
     private int id;

@@ -2,22 +2,22 @@ package model;
 
 import java.util.List;
 
-public class Plat extends MenuItem {
-    private boolean vegetarien;
+public class Dessert extends MenuItem {
+    private boolean sucre;
     private List<Ingredient> ingredients;
 
-    public Plat(String nom, double prix, String description, boolean vegetarien, List<Ingredient> ingredients) {
+    public Dessert(String nom, double prix, String description, boolean sucre, List<Ingredient> ingredients) {
         super(nom, prix, description);
-        this.vegetarien = vegetarien;
+        this.sucre = sucre;
         this.ingredients = ingredients;
     }
 
-    public boolean isVegetarien() {
-        return vegetarien;
+    public boolean isSucre() {
+        return sucre;
     }
 
-    public void setVegetarien(boolean vegetarien) {
-        this.vegetarien = vegetarien;
+    public void setSucre(boolean sucre) {
+        this.sucre = sucre;
     }
 
     public List<Ingredient> getIngredients() {
@@ -30,11 +30,11 @@ public class Plat extends MenuItem {
 
     @Override
     public String getType() {
-        return "Plat";
+        return "Dessert";
     }
 
     @Override
     public String toString() {
-        return super.toString() + (vegetarien ? " (végétarien)" : "");
+        return super.toString() + (sucre ? " (sucré)" : " (non sucré)");
     }
 }
