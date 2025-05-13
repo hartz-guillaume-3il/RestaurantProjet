@@ -1,9 +1,11 @@
 package factory;
 
-public class Boisson extends MenuItemFactory  {
+import model.MenuItem;
 
-	public Boisson(String nom, double prix) {
-		super(nom, prix);
+public class Boisson extends MenuItem {
+
+	public Boisson(String nom, double prix, String description) {
+		super(nom, prix,description);
 		// TODO Auto-generated constructor stub
 	}
 
