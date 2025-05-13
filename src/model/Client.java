@@ -1,10 +1,32 @@
 package model;
 
-import java.util.List;
+public class Client {
+	private String nom;
+	private String telephone;
 
-public class Client extends Employe {
-    private List<Table> tablesAssignees;
+	public Client(String nom, String telephone) {
+		this.nom = nom;
+		this.telephone = telephone;
+	}
 
-    @Override
-    public void afficherInfos() {}
+	public String getNom() {
+		return nom;
+	}
+
+	public void setNom(String nom) {
+		this.nom = nom;
+	}
+
+	public String getTelephone() {
+		return telephone;
+	}
+
+	public void setTelephone(String telephone) {
+		this.telephone = telephone;
+	}
+
+	@Override
+	public String toString() {
+		return "Client : " + nom + " (Tel: " + telephone + ")";
+	}
 }
