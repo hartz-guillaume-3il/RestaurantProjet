@@ -1,18 +1,26 @@
 package factory;
-import model.MenuItem;
-import factory.Plat;
-import factory.Boisson;
 
+import model.MenuItem;
+import model.Ingredient;
+
+import java.util.List;
 
 public class MenuItemFactory {
-    public static MenuItem createMenuItem(String type, String nom, double prix, String description) {
+    public static MenuItem createMenuItem(String type, String nom, double prix, String description,
+                                          boolean flag, List<Ingredient> ingredients) {
         switch (type.toLowerCase()) {
             case "plat":
-                return new Plat(nom, prix, description);
-            case "boisson":
-                return new Boisson(nom, prix, description);
+                return PlatFactory.createItem(nom, prix, description, flag, ingredients);
+            case "dessert":
+                return DessertFactory.createItem(nom, prix, description, flag, ingredients);
+            case "entree":
+                return EntreeFactory.createItem(nom, prix, description, flag, ingredients);
             default:
-                throw new IllegalArgumentException("Type d'élément inconnu : " + type);
+                throw new IllegalArgumentException("Type d’élément inconnu : " + type);
         }
+    }
+
+    public static MenuItem createBoisson(String nom, double prix, String description, boolean alcoolisee) {
+        return BoissonFactory.createItem(nom, prix, description, alcoolisee);
     }
 }
