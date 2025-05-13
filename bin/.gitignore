@@ -1,15 +1,5 @@
-/factory/
-/model/
-<<<<<<< Updated upstream
-=======
-/state/
-/facade/
 /Main/
-/decorator/
-/factory/
-/observer/
-/reporting/
-/repository/
-/strategy/
 /ui/
->>>>>>> Stashed changes
+/facade/
+/model/
+/state/
