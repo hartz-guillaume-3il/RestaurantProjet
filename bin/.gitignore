@@ -3,3 +3,9 @@
 /facade/
 /model/
 /state/
+/decorator/
+/factory/
+/observer/
+/reporting/
+/repository/
+/strategy/
