@@ -36,23 +36,17 @@ public class ConsoleUI {
 		boolean continuer = true;
 		while (continuer) {
 			String[] options = { "Gérer les Réservations", "Gérer les Commandes", "Gérer le Menu", "Quitter" };
-			int choix = JOptionPane.showOptionDialog(
-				null,
-				"Bienvenue dans le Système de Gestion du Restaurant\n\nVeuillez sélectionner une option :",
-				"Menu Principal",
-				JOptionPane.DEFAULT_OPTION,
-				JOptionPane.INFORMATION_MESSAGE,
-				null,
-				options,
-				options[0]
-			);
+			int choix = JOptionPane.showOptionDialog(null,
+					"Bienvenue dans le Système de Gestion du Restaurant\n\nVeuillez sélectionner une option :",
+					"Menu Principal", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options,
+					options[0]);
 
 			switch (choix) {
-				case 0 -> gererReservations();
-				case 1 -> gererCommandes();
-				case 2 -> gererMenu();
-				case 3, JOptionPane.CLOSED_OPTION -> continuer = false;
-				default -> continuer = false;
+			case 0 -> gererReservations();
+			case 1 -> gererCommandes();
+			case 2 -> gererMenu();
+			case 3, JOptionPane.CLOSED_OPTION -> continuer = false;
+			default -> continuer = false;
 			}
 		}
 		JOptionPane.showMessageDialog(null, "Merci d'avoir utilisé notre système. Au revoir !");
@@ -96,12 +90,13 @@ public class ConsoleUI {
 		List<MenuItem> items = saisirItems();
 		Commande commande = facade.prendreCommande(client, table, items);
 
-		String[] etats = {"En cours", "Prête", "Servie", "Payée"};
+		String[] etats = { "En cours", "Prête", "Servie", "Payée" };
 		int etatChoisi;
 		do {
-			etatChoisi = JOptionPane.showOptionDialog(null, "État actuel : " + commande.getEtat().getNomEtat() +
-				"\nSélectionnez le prochain état :", "Modification de l'état de la commande",
-				JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, etats, etats[0]);
+			etatChoisi = JOptionPane.showOptionDialog(null,
+					"État actuel : " + commande.getEtat().getNomEtat() + "\nSélectionnez le prochain état :",
+					"Modification de l'état de la commande", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE,
+					null, etats, etats[0]);
 
 			if (etatChoisi >= 0 && !commande.getEtat().getNomEtat().equals("Payée")) {
 				commande.avancerEtat();
@@ -115,18 +110,19 @@ public class ConsoleUI {
 	private void gererMenu() {
 		boolean continuer = true;
 		while (continuer) {
-			String[] options = { "Ajouter Plat", "Ajouter Entrée", "Ajouter Dessert", "Ajouter Boisson", "Afficher Menu", "Retour" };
-			int choix = JOptionPane.showOptionDialog(null, "Gestion du Menu", "Menu",
-				JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+			String[] options = { "Ajouter Plat", "Ajouter Entrée", "Ajouter Dessert", "Ajouter Boisson",
+					"Afficher Menu", "Retour" };
+			int choix = JOptionPane.showOptionDialog(null, "Gestion du Menu", "Menu", JOptionPane.DEFAULT_OPTION,
+					JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
 
 			switch (choix) {
-				case 0 -> ajouterPlat();
-				case 1 -> ajouterEntree();
-				case 2 -> ajouterDessert();
-				case 3 -> ajouterBoisson();
-				case 4 -> afficherMenu();
-				case 5, JOptionPane.CLOSED_OPTION -> continuer = false;
-				default -> continuer = false;
+			case 0 -> ajouterPlat();
+			case 1 -> ajouterEntree();
+			case 2 -> ajouterDessert();
+			case 3 -> ajouterBoisson();
+			case 4 -> afficherMenu();
+			case 5, JOptionPane.CLOSED_OPTION -> continuer = false;
+			default -> continuer = false;
 			}
 		}
 	}
@@ -165,7 +161,8 @@ public class ConsoleUI {
 
 	private MenuItem creerMenuItem(String type, boolean demandeAlcool) {
 		String nom = JOptionPane.showInputDialog("Nom du " + type + " :");
-		if (nom == null || nom.trim().isEmpty()) return null;
+		if (nom == null || nom.trim().isEmpty())
+			return null;
 
 		double prix = Double.parseDouble(JOptionPane.showInputDialog("Prix du " + type + " :"));
 		String description = JOptionPane.showInputDialog("Description :");
@@ -177,7 +174,9 @@ public class ConsoleUI {
 		} else if (type.equalsIgnoreCase("Dessert")) {
 			return new Dessert(nom, prix, description, true, new ArrayList<>());
 		} else if (type.equalsIgnoreCase("Entrée")) {
-			return new Entree(nom, prix, description, true, new ArrayList<>());
+			int froideOption = JOptionPane.showConfirmDialog(null, "L'entrée est-elle froide ?");
+			boolean froide = (froideOption == JOptionPane.YES_OPTION);
+			return new Entree(nom, prix, description, froide, new ArrayList<>());
 		} else {
 			return new Plat(nom, prix, description, false, new ArrayList<>());
 		}
@@ -201,7 +200,8 @@ public class ConsoleUI {
 		while (true) {
 			afficherMenu();
 			String nomItem = JOptionPane.showInputDialog("Nom de l'article à ajouter (ou vide pour terminer) :");
-			if (nomItem == null || nomItem.trim().isEmpty()) break;
+			if (nomItem == null || nomItem.trim().isEmpty())
+				break;
 			MenuItem item = trouverMenuItemParNom(nomItem);
 			if (item != null) {
 				items.add(item);
@@ -224,7 +224,8 @@ public class ConsoleUI {
 	private String getTablesDisponibles() {
 		StringBuilder sb = new StringBuilder();
 		for (Table table : tables) {
-			if (!table.isOccupee()) sb.append(table).append("\n");
+			if (!table.isOccupee())
+				sb.append(table).append("\n");
 		}
 		return sb.length() > 0 ? sb.toString() : "Aucune table disponible";
 	}
@@ -232,21 +233,24 @@ public class ConsoleUI {
 	private String getTablesOccupees() {
 		StringBuilder sb = new StringBuilder();
 		for (Table table : tables) {
-			if (table.isOccupee()) sb.append(table).append("\n");
+			if (table.isOccupee())
+				sb.append(table).append("\n");
 		}
 		return sb.length() > 0 ? sb.toString() : "Aucune table occupée";
 	}
 
 	private Table trouverTableParNumero(int numero) {
 		for (Table table : tables) {
-			if (table.getNumero() == numero) return table;
+			if (table.getNumero() == numero)
+				return table;
 		}
 		return null;
 	}
 
 	private Client trouverClientParNom(String nom) {
 		for (Client client : clients) {
-			if (client.getNom().equalsIgnoreCase(nom)) return client;
+			if (client.getNom().equalsIgnoreCase(nom))
+				return client;
 		}
 		return null;
 	}
