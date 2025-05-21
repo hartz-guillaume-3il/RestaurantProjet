@@ -1,6 +1,11 @@
 package ui.console;
 
 import facade.RestaurantFacade;
+import strategy.PaymentStrategy;
+import strategy.CashPayment;
+import strategy.CreditCardPayment;
+
+
 import model.MenuItem;
 import model.*;
 import javax.swing.*;
@@ -103,8 +108,10 @@ public class ConsoleUI {
 			}
 		} while (etatChoisi >= 0 && !commande.getEtat().getNomEtat().equals("Payée"));
 
-		Facture facture = facade.payerCommande(commande);
+		PaymentStrategy strategy = choisirMethodePaiement();
+		Facture facture = facade.payerCommande(commande, strategy);
 		JOptionPane.showMessageDialog(null, "Facture générée :\n" + facture.toString());
+
 	}
 
 	private void gererMenu() {
@@ -254,4 +261,25 @@ public class ConsoleUI {
 		}
 		return null;
 	}
+	
+	private PaymentStrategy choisirMethodePaiement() {
+		String[] options = {"Espèces", "Carte bancaire"};
+		int choix = JOptionPane.showOptionDialog(
+			null,
+			"Choisissez une méthode de paiement :",
+			"Paiement",
+			JOptionPane.DEFAULT_OPTION,
+			JOptionPane.QUESTION_MESSAGE,
+			null,
+			options,
+			options[0]
+		);
+
+		return switch (choix) {
+			case 0 -> new CashPayment();
+			case 1 -> new CreditCardPayment();
+			default -> new CashPayment(); // par défaut
+		};
+	}
+
 }
