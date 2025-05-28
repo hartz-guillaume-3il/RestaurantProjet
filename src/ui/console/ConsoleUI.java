@@ -2,9 +2,10 @@ package ui.console;
 
 import facade.RestaurantFacade;
 import strategy.PaymentStrategy;
-import strategy.CashPayment;
-import strategy.CreditCardPayment;
-
+import strategy.EspecePaiement;
+import strategy.PayPalPaiement;
+import strategy.CarteBancairePaiement;
+import strategy.CryptoPaiement;
 import model.MenuItem;
 import model.*;
 import observer.StockObserver;
@@ -30,8 +31,6 @@ public class ConsoleUI {
 		clients = new ArrayList<>();
 		menuItems = new ArrayList<>();
 		initialiserTables();
-
-		// Initialisation des observers
 		stockObserver = new StockObserver();
 		cuisineObserver = new CuisineObserver();
 	}
@@ -103,7 +102,6 @@ public class ConsoleUI {
 		List<MenuItem> items = saisirItems();
 		Commande commande = facade.prendreCommande(client, table, items);
 
-		// Ajout des observers à la commande
 		commande.addObserver(stockObserver);
 		commande.addObserver(cuisineObserver);
 
@@ -274,14 +272,16 @@ public class ConsoleUI {
 	}
 
 	private PaymentStrategy choisirMethodePaiement() {
-		String[] options = { "Espèces", "Carte bancaire" };
+		String[] options = { "Espèces", "Carte bancaire", "Crypto Monnaie", "Virement Paypal" };
 		int choix = JOptionPane.showOptionDialog(null, "Choisissez une méthode de paiement :", "Paiement",
 				JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
 
 		return switch (choix) {
-		case 0 -> new CashPayment();
-		case 1 -> new CreditCardPayment();
-		default -> new CashPayment(); // par défaut
+		case 0 -> new EspecePaiement();
+		case 1 -> new CarteBancairePaiement();
+		case 2 -> new CryptoPaiement();
+		case 3 -> new PayPalPaiement();
+		default -> new EspecePaiement();
 		};
 	}
 }

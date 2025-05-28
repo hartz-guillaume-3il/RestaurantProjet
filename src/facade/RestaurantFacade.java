@@ -36,13 +36,11 @@ public class RestaurantFacade {
 	    commande.calculerMontant();
 	    double montant = commande.getMontantTotal();
 
-	    // Appliquer le moyen de paiement
 	    paymentMethod.pay(montant);
 
-	    // Créer et retourner la facture
 	    Facture facture = new Facture(commande, montant);
 	    facture.setPayee(true);
-	    System.out.println("Facture payée avec stratégie pour le montant de : " + montant + "€");
+	    System.out.println("Facture payée pour le montant de : " + montant + "€");
 	    return facture;
 	}
 
