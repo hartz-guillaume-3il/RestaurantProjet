@@ -3,40 +3,44 @@ package model;
 import java.util.List;
 
 public class Dessert extends MenuItem {
-    private boolean sucre;
-    private List<Ingredient> ingredients;
+	private boolean sucre;
+	private List<Ingredient> ingredients;
 
-    public Dessert(String nom, double prix, String description, boolean sucre, List<Ingredient> ingredients) {
-        super(nom, prix, description);
-        this.sucre = sucre;
-        this.ingredients = ingredients;
-    }
-    public Dessert(String ligne) {
-        super(ligne);
-    }
-    public boolean isSucre() {
-        return sucre;
-    }
+	public Dessert(String nom, double prix, String description, boolean sucre, List<Ingredient> ingredients) {
+		super(nom, prix, description);
+		this.sucre = sucre;
+		this.ingredients = ingredients;
+	}
 
-    public void setSucre(boolean sucre) {
-        this.sucre = sucre;
-    }
+	public Dessert(String ligne) {
+		super(ligne);
+		String[] parties = ligne.split(";");
+		this.sucre = Boolean.parseBoolean(parties[4]);
+	}
 
-    public List<Ingredient> getIngredients() {
-        return ingredients;
-    }
+	public boolean isSucre() {
+		return sucre;
+	}
 
-    public void setIngredients(List<Ingredient> ingredients) {
-        this.ingredients = ingredients;
-    }
+	public void setSucre(boolean sucre) {
+		this.sucre = sucre;
+	}
 
-    @Override
-    public String getType() {
-        return "Dessert";
-    }
+	public List<Ingredient> getIngredients() {
+		return ingredients;
+	}
 
-    @Override
-    public String toString() {
-        return super.toString() + (sucre ? " (sucré)" : " (non sucré)");
-    }
+	public void setIngredients(List<Ingredient> ingredients) {
+		this.ingredients = ingredients;
+	}
+
+	@Override
+	public String getType() {
+		return "Dessert";
+	}
+
+	@Override
+	public String toString() {
+		return super.toString() + (sucre ? " (sucré)" : " (non sucré)");
+	}
 }

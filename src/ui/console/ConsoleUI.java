@@ -198,13 +198,17 @@ public class ConsoleUI {
 			boolean alcoolisee = (alcoolOption == JOptionPane.YES_OPTION);
 			return new Boisson(nom, prix, description, alcoolisee);
 		} else if (type.equalsIgnoreCase("Dessert")) {
-			return new Dessert(nom, prix, description, true, new ArrayList<>());
+			int SaleOption = JOptionPane.showConfirmDialog(null, "Le dessert est-il sucré ?");
+			boolean sale = (SaleOption == JOptionPane.YES_OPTION);
+			return new Dessert(nom, prix, description, sale, new ArrayList<>());
 		} else if (type.equalsIgnoreCase("Entrée")) {
 			int froideOption = JOptionPane.showConfirmDialog(null, "L'entrée est-elle froide ?");
 			boolean froide = (froideOption == JOptionPane.YES_OPTION);
 			return new Entree(nom, prix, description, froide, new ArrayList<>());
 		} else {
-			return new Plat(nom, prix, description, false, new ArrayList<>());
+			int VegeOption = JOptionPane.showConfirmDialog(null, "Le plat est-il végétarien ?");
+			boolean vegetarien = (VegeOption == JOptionPane.YES_OPTION);
+			return new Plat(nom, prix, description, vegetarien, new ArrayList<>());
 		}
 	}
 
@@ -298,7 +302,7 @@ public class ConsoleUI {
 	private void sauvegarderMenus() {
 		try (BufferedWriter writer = new BufferedWriter(new FileWriter("menus.txt"))) {
 			for (MenuItem menu : menuItems) {
-				writer.write(menu.toString());
+				writer.write(menu.getType() + ";" + menu.getNom() + ";" + menu.getPrix() + ";" + menu.getDescription());
 				writer.newLine();
 			}
 		} catch (IOException e) {
@@ -309,25 +313,25 @@ public class ConsoleUI {
 	private void chargerMenus() {
 		File fichier = new File("menus.txt");
 		if (!fichier.exists()) {
+			System.err.println("Fichier menus.txt introuvable !");
 			return;
 		}
 		try (BufferedReader reader = new BufferedReader(new FileReader(fichier))) {
 			String ligne;
 			while ((ligne = reader.readLine()) != null) {
-				String[] parties = ligne.split(" - |\\(|€\\): | - ");
+				String[] parties = ligne.split(";");
 				if (parties.length >= 4) {
 					String type = parties[0].trim();
 					String nom = parties[1].trim();
 					double prix = Double.parseDouble(parties[2].trim());
 					String description = parties[3].trim();
 
-					MenuItem item;
+					MenuItem item = null;
 					switch (type) {
 					case "Plat" -> item = new Plat(nom, prix, description, false, new ArrayList<>());
 					case "Entrée" -> item = new Entree(nom, prix, description, false, new ArrayList<>());
 					case "Dessert" -> item = new Dessert(nom, prix, description, false, new ArrayList<>());
 					case "Boisson" -> item = new Boisson(nom, prix, description, false);
-					default -> item = null;
 					}
 
 					if (item != null) {
@@ -339,4 +343,5 @@ public class ConsoleUI {
 			System.err.println("Erreur lors du chargement des menus : " + e.getMessage());
 		}
 	}
+
 }
