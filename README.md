@@ -26,7 +26,7 @@ RestaurantProjet/
   - facade/
   - Application.java
 - diagramme.png
-- README.txt
+- README.md
 
 Exécution :
 1. Importer le projet dans votre IDE Java préféré (Eclipse, IntelliJ, NetBeans...).
