@@ -1,6 +1,8 @@
 package model;
 
-public class Facture {
+import observer.Observer;
+
+public class Facture implements Observer {
 	private Commande commande;
 	private double montantAPayer;
 	private boolean payee;
@@ -9,6 +11,7 @@ public class Facture {
 		this.commande = commande;
 		this.montantAPayer = montantAPayer;
 		this.payee = false;
+		commande.addObserver(this);
 	}
 
 	public void genererFacture() {
@@ -40,5 +43,13 @@ public class Facture {
 	public String toString() {
 		return "Facture pour Commande #" + commande.getId() + ", Montant : " + montantAPayer + "€, "
 				+ (payee ? "Payée" : "Non payée");
+	}
+
+	@Override
+	public void update(Commande commande) {
+		// TODO Auto-generated method stub
+		this.montantAPayer = commande.calculerMontant();
+		System.out.println("Facture mise à jour : montant à payer = " + montantAPayer + " €");
+
 	}
 }

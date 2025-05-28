@@ -5,9 +5,11 @@ import strategy.PaymentStrategy;
 import strategy.CashPayment;
 import strategy.CreditCardPayment;
 
-
 import model.MenuItem;
 import model.*;
+import observer.StockObserver;
+import observer.CuisineObserver;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -19,6 +21,8 @@ public class ConsoleUI {
 	private List<Table> tables;
 	private List<Client> clients;
 	private List<MenuItem> menuItems;
+	private StockObserver stockObserver;
+	private CuisineObserver cuisineObserver;
 
 	public ConsoleUI() {
 		facade = new RestaurantFacade();
@@ -26,6 +30,10 @@ public class ConsoleUI {
 		clients = new ArrayList<>();
 		menuItems = new ArrayList<>();
 		initialiserTables();
+
+		// Initialisation des observers
+		stockObserver = new StockObserver();
+		cuisineObserver = new CuisineObserver();
 	}
 
 	private void initialiserTables() {
@@ -95,6 +103,10 @@ public class ConsoleUI {
 		List<MenuItem> items = saisirItems();
 		Commande commande = facade.prendreCommande(client, table, items);
 
+		// Ajout des observers à la commande
+		commande.addObserver(stockObserver);
+		commande.addObserver(cuisineObserver);
+
 		String[] etats = { "En cours", "Prête", "Servie", "Payée" };
 		int etatChoisi;
 		do {
@@ -111,7 +123,6 @@ public class ConsoleUI {
 		PaymentStrategy strategy = choisirMethodePaiement();
 		Facture facture = facade.payerCommande(commande, strategy);
 		JOptionPane.showMessageDialog(null, "Facture générée :\n" + facture.toString());
-
 	}
 
 	private void gererMenu() {
@@ -261,25 +272,16 @@ public class ConsoleUI {
 		}
 		return null;
 	}
-	
+
 	private PaymentStrategy choisirMethodePaiement() {
-		String[] options = {"Espèces", "Carte bancaire"};
-		int choix = JOptionPane.showOptionDialog(
-			null,
-			"Choisissez une méthode de paiement :",
-			"Paiement",
-			JOptionPane.DEFAULT_OPTION,
-			JOptionPane.QUESTION_MESSAGE,
-			null,
-			options,
-			options[0]
-		);
+		String[] options = { "Espèces", "Carte bancaire" };
+		int choix = JOptionPane.showOptionDialog(null, "Choisissez une méthode de paiement :", "Paiement",
+				JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
 
 		return switch (choix) {
-			case 0 -> new CashPayment();
-			case 1 -> new CreditCardPayment();
-			default -> new CashPayment(); // par défaut
+		case 0 -> new CashPayment();
+		case 1 -> new CreditCardPayment();
+		default -> new CashPayment(); // par défaut
 		};
 	}
-
 }

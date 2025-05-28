@@ -1,5 +1,7 @@
 package observer;
 
-public class Observer {
+import model.Commande;
 
+public interface Observer {
+	void update(Commande commande);
 }
