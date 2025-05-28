@@ -13,6 +13,7 @@ import observer.CuisineObserver;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,12 +34,17 @@ public class ConsoleUI {
 		initialiserTables();
 		stockObserver = new StockObserver();
 		cuisineObserver = new CuisineObserver();
+		chargerMenus();
 	}
 
 	private void initialiserTables() {
+		tables.clear();
 		tables.add(new Table(1, 4));
 		tables.add(new Table(2, 2));
 		tables.add(new Table(3, 6));
+		tables.add(new Table(4, 4));
+		tables.add(new Table(5, 2));
+		tables.add(new Table(6, 8));
 	}
 
 	public void lancer() {
@@ -147,6 +153,7 @@ public class ConsoleUI {
 		MenuItem plat = creerMenuItem("Plat", false);
 		if (plat != null) {
 			menuItems.add(plat);
+			sauvegarderMenus();
 			JOptionPane.showMessageDialog(null, "Plat ajouté : " + plat);
 		}
 	}
@@ -155,6 +162,7 @@ public class ConsoleUI {
 		MenuItem entree = creerMenuItem("Entrée", false);
 		if (entree != null) {
 			menuItems.add(entree);
+			sauvegarderMenus();
 			JOptionPane.showMessageDialog(null, "Entrée ajoutée : " + entree);
 		}
 	}
@@ -163,6 +171,7 @@ public class ConsoleUI {
 		MenuItem dessert = creerMenuItem("Dessert", false);
 		if (dessert != null) {
 			menuItems.add(dessert);
+			sauvegarderMenus();
 			JOptionPane.showMessageDialog(null, "Dessert ajouté : " + dessert);
 		}
 	}
@@ -171,6 +180,7 @@ public class ConsoleUI {
 		MenuItem boisson = creerMenuItem("Boisson", true);
 		if (boisson != null) {
 			menuItems.add(boisson);
+			sauvegarderMenus();
 			JOptionPane.showMessageDialog(null, "Boisson ajoutée : " + boisson);
 		}
 	}
@@ -283,5 +293,50 @@ public class ConsoleUI {
 		case 3 -> new PayPalPaiement();
 		default -> new EspecePaiement();
 		};
+	}
+
+	private void sauvegarderMenus() {
+		try (BufferedWriter writer = new BufferedWriter(new FileWriter("menus.txt"))) {
+			for (MenuItem menu : menuItems) {
+				writer.write(menu.toString());
+				writer.newLine();
+			}
+		} catch (IOException e) {
+			System.err.println("Erreur lors de la sauvegarde des menus : " + e.getMessage());
+		}
+	}
+
+	private void chargerMenus() {
+		File fichier = new File("menus.txt");
+		if (!fichier.exists()) {
+			return;
+		}
+		try (BufferedReader reader = new BufferedReader(new FileReader(fichier))) {
+			String ligne;
+			while ((ligne = reader.readLine()) != null) {
+				String[] parties = ligne.split(" - |\\(|€\\): | - ");
+				if (parties.length >= 4) {
+					String type = parties[0].trim();
+					String nom = parties[1].trim();
+					double prix = Double.parseDouble(parties[2].trim());
+					String description = parties[3].trim();
+
+					MenuItem item;
+					switch (type) {
+					case "Plat" -> item = new Plat(nom, prix, description, false, new ArrayList<>());
+					case "Entrée" -> item = new Entree(nom, prix, description, false, new ArrayList<>());
+					case "Dessert" -> item = new Dessert(nom, prix, description, false, new ArrayList<>());
+					case "Boisson" -> item = new Boisson(nom, prix, description, false);
+					default -> item = null;
+					}
+
+					if (item != null) {
+						menuItems.add(item);
+					}
+				}
+			}
+		} catch (IOException | NumberFormatException e) {
+			System.err.println("Erreur lors du chargement des menus : " + e.getMessage());
+		}
 	}
 }
