@@ -10,7 +10,7 @@ public class Payee extends EtatCommande {
 
 	@Override
 	public void avancerEtat() {
-		System.out.println("Commande #" + commande.getId() + " est déjà payée, aucun autre état.");
+		System.out.println("Commande #" + commande.getId() + " est déjà payée. Aucun changement d'état.");
 	}
 
 	@Override

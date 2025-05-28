@@ -29,6 +29,7 @@ public class Commande implements Contexte {
 	public void ajouterItem(MenuItem item) {
 		items.add(item);
 		calculerMontant();
+		notifyObservers(); // Notifie les observateurs dès qu'on ajoute un item (optionnel)
 	}
 
 	public double calculerMontant() {
@@ -65,6 +66,7 @@ public class Commande implements Contexte {
 
 	public void setEtat(EtatCommande etat) {
 		this.etat = etat;
+		notifyObservers(); // Notifie les observateurs dès que l'état change
 	}
 
 	public void avancerEtat() {
@@ -79,24 +81,18 @@ public class Commande implements Contexte {
 
 	@Override
 	public void addObserver(Observer observer) {
-		// TODO Auto-generated method stub
 		observers.add(observer);
-
 	}
 
 	@Override
 	public void removeObserver(Observer observer) {
-		// TODO Auto-generated method stub
 		observers.remove(observer);
-
 	}
 
 	@Override
 	public void notifyObservers() {
-		// TODO Auto-generated method stub
 		for (Observer observer : observers) {
 			observer.update(this);
 		}
-
 	}
 }

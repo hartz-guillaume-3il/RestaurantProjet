@@ -1,11 +1,4 @@
-/Main/
-/ui/
-/facade/
 /model/
 /state/
-/decorator/
-/factory/
-/observer/
-/reporting/
-/repository/
-/strategy/
+/ui/
+/stockage/
