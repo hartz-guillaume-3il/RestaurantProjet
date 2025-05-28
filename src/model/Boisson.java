@@ -7,6 +7,10 @@ public class Boisson extends MenuItem {
         super(nom, prix, description);
         this.alcoolisee = alcoolisee;
     }
+    
+    public Boisson(String ligne) {
+        super(ligne);
+    }
 
     public boolean isAlcoolisee() {
         return alcoolisee;

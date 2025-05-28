@@ -11,6 +11,10 @@ public class Entree extends MenuItem {
         this.froide = froide;
         this.ingredients = ingredients;
     }
+    
+    public Entree(String ligne) {
+        super(ligne);
+    }
 
     public boolean isFroide() {
         return froide;

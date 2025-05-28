@@ -11,7 +11,9 @@ public class Dessert extends MenuItem {
         this.sucre = sucre;
         this.ingredients = ingredients;
     }
-
+    public Dessert(String ligne) {
+        super(ligne);
+    }
     public boolean isSucre() {
         return sucre;
     }

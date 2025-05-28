@@ -11,7 +11,11 @@ public class Plat extends MenuItem {
         this.vegetarien = vegetarien;
         this.ingredients = ingredients;
     }
-
+    
+    public Plat(String ligne) {
+        super(ligne);
+    }
+    
     public boolean isVegetarien() {
         return vegetarien;
     }
