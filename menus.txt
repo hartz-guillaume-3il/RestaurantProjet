@@ -2,14 +2,17 @@ Boisson;Bière blonde;4.5;Bière légère, houblonnée;true
 Boisson;Jus de pomme;3.0;Pur jus de pommes fraîches;false
 Boisson;Cocktail maison;6.5;Mélange de fruits exotiques et de rhum;true
 Boisson;Eau plate;1.5;Eau de source;false
+
 Entrée;Soupe de légumes;4.0;Soupe chaude aux légumes de saison;false
 Entrée;Carpaccio de bœuf;7.0;Fines tranches de bœuf avec parmesan et roquette;false
 Entrée;Salade César;5.5;Salade verte, poulet, croûtons, sauce César;true
 Entrée;Assiette de crudités;4.5;Mélange de légumes crus, sauce yaourt;true
+
 Plat;Poulet rôti;12.0;Poulet fermier rôti, pommes de terre fondantes;false
 Plat;Lasagnes végétariennes;11.5;Lasagnes aux légumes, sauce tomate maison;true
 Plat;Bœuf bourguignon;13.0;Bœuf mijoté au vin rouge, carottes, champignons;false
 Plat;Curry de légumes;9.0;Légumes de saison, sauce curry doux;true
+
 Dessert;Tarte aux pommes;4.0;Pâte croustillante, pommes caramélisées;true
 Dessert;Cheesecake au citron;5.0;Cheesecake crémeux au citron, spéculoos;true
 Dessert;Assiette de fromages;6.0;Sélection de fromages affinés;false
