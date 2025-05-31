@@ -1,40 +1,49 @@
 package model;
 
 public class Ingredient {
-	private String nom;
-	private int quantiteStock;
+    private String nom;
+    private int quantiteStock;
+    private String unite;
 
-	public Ingredient(String nom, int quantiteStock) {
-		this.nom = nom;
-		this.quantiteStock = quantiteStock;
-	}
+    public Ingredient(String nom, int quantiteStock, String unite) {
+        this.nom = nom;
+        this.quantiteStock = quantiteStock;
+        this.unite = unite;
+    }
 
-	public String getNom() {
-		return nom;
-	}
+    public String getNom() {
+        return nom;
+    }
 
-	public void setNom(String nom) {
-		this.nom = nom;
-	}
+    public void setNom(String nom) {
+        this.nom = nom;
+    }
 
-	public int getQuantiteStock() {
-		return quantiteStock;
-	}
+    public int getQuantiteStock() {
+        return quantiteStock;
+    }
 
-	public void setQuantiteStock(int quantiteStock) {
-		this.quantiteStock = quantiteStock;
-	}
+    public void setQuantiteStock(int quantiteStock) {
+        this.quantiteStock = quantiteStock;
+    }
 
-	public void ajusterStock(int delta) {
-		this.quantiteStock += delta;
-		if (this.quantiteStock < 0) {
-			this.quantiteStock = 0;
-		}
-	}
+    public String getUnite() {
+        return unite;
+    }
 
-	@Override
-	public String toString() {
-		return "Ingredient : " + nom + ", Quantitée disponible en stock (nbr) : " + quantiteStock;
-	}
+    public void setUnite(String unite) {
+        this.unite = unite;
+    }
 
+    public void ajusterStock(int delta) {
+        this.quantiteStock += delta;
+        if (this.quantiteStock < 0) {
+            this.quantiteStock = 0;
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "Ingrédient : " + nom + ", Quantité en stock : " + quantiteStock + " " + unite;
+    }
 }

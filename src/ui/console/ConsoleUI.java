@@ -24,6 +24,8 @@ public class ConsoleUI {
 	private RestaurantStockage stockage;
 	private List<Table> tables;
 	private List<Client> clients;
+	private List<Employe> personnel;
+	private List<Commande> commandes;
 	private StockObserver stockObserver;
 	private CuisineObserver cuisineObserver;
 
@@ -32,9 +34,20 @@ public class ConsoleUI {
 		stockage = new RestaurantStockage();
 		tables = new ArrayList<>();
 		clients = new ArrayList<>();
+		personnel = stockage.chargerPersonnel();
+		commandes = stockage.chargerCommandes();
 		initialiserTables();
 		stockObserver = new StockObserver();
 		cuisineObserver = new CuisineObserver();
+
+		List<Reservation> reservations = stockage.chargerReservations();
+		for (Reservation r : reservations) {
+			clients.add(r.getClient());
+			Table table = trouverTableParNumero(r.getTable().getNumero());
+			if (table != null) {
+				table.setOccupee(true);
+			}
+		}
 	}
 
 	private void initialiserTables() {
@@ -56,7 +69,7 @@ public class ConsoleUI {
 			String[] options = { "Gérer les Réservations", "Gérer les Commandes", "Gérer le Menu", "Gérer le Personnel",
 					"Gérer les Ingrédients", "Quitter" };
 			int choix = JOptionPane.showOptionDialog(null,
-					"Bienvenue dans le Système de Gestion du Restaurant\n\nVeuillez sélectionner une option :",
+					"Bienvenue dans le Système de Gestion du Restaurant\\n\\nVeuillez sélectionner une option :",
 					"Menu Principal", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options,
 					options[0]);
 
@@ -70,11 +83,104 @@ public class ConsoleUI {
 			default -> continuer = false;
 			}
 		}
+
+		stockage.sauvegarderPersonnel(personnel);
+
+		List<Reservation> reservations = new ArrayList<>();
+		for (Table table : tables) {
+			if (table.isOccupee()) {
+				Client client = trouverClientParTable(table);
+				if (client != null) {
+					reservations.add(new Reservation(client, table));
+				}
+			}
+		}
+		stockage.sauvegarderReservations(reservations);
+
+		stockage.sauvegarderCommandes(commandes);
+
 		JOptionPane.showMessageDialog(null, "Merci d'avoir utilisé notre système. Au revoir !");
 	}
 
 	private void gererPersonnel() {
-		JOptionPane.showMessageDialog(null, "Fonctionnalité de gestion du personnel à implémenter.");
+		String[] options = { "Afficher Personnel", "Ajouter Employé", "Supprimer Employé", "Retour" };
+		boolean continuer = true;
+		while (continuer) {
+			int choix = JOptionPane.showOptionDialog(null, "Gestion du Personnel", "Personnel",
+					JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+
+			switch (choix) {
+			case 0 -> afficherPersonnel();
+			case 1 -> ajouterEmploye();
+			case 2 -> supprimerEmploye();
+			case 3, JOptionPane.CLOSED_OPTION -> continuer = false;
+			default -> continuer = false;
+			}
+		}
+	}
+
+	private void ajouterEmploye() {
+		String nom = JOptionPane.showInputDialog("Nom de l'employé :");
+		if (nom == null || nom.trim().isEmpty()) {
+			JOptionPane.showMessageDialog(null, "Nom invalide.");
+			return;
+		}
+
+		String[] roles = { "Serveur", "Chef", "Manager" };
+		int choixRole = JOptionPane.showOptionDialog(null, "Sélectionnez un rôle :", "Rôle", JOptionPane.DEFAULT_OPTION,
+				JOptionPane.QUESTION_MESSAGE, null, roles, roles[0]);
+
+		Employe employe = switch (choixRole) {
+		case 0 -> new Serveur(nom, choixRole, tables);
+		case 1 -> new Chef(nom, choixRole, tables);
+		case 2 -> new Manager(nom, choixRole, tables);
+		default -> null;
+		};
+
+		if (employe != null) {
+			personnel.add(employe);
+			JOptionPane.showMessageDialog(null, "Employé ajouté : " + employe.getNom());
+		} else {
+			JOptionPane.showMessageDialog(null, "Aucun employé ajouté.");
+		}
+	}
+
+	private void afficherPersonnel() {
+		if (personnel.isEmpty()) {
+			JOptionPane.showMessageDialog(null, "Aucun employé enregistré.");
+			return;
+		}
+		StringBuilder sb = new StringBuilder("Personnel actuel :\n");
+		for (Employe e : personnel) {
+			sb.append("- ").append(e.getNom()).append("\n");
+		}
+		JOptionPane.showMessageDialog(null, sb.toString());
+	}
+
+	private void supprimerEmploye() {
+		if (personnel.isEmpty()) {
+			JOptionPane.showMessageDialog(null, "Aucun employé à supprimer.");
+			return;
+		}
+
+		String nom = JOptionPane.showInputDialog("Nom de l'employé à supprimer :");
+		if (nom == null || nom.trim().isEmpty())
+			return;
+
+		Employe toRemove = null;
+		for (Employe e : personnel) {
+			if (e.getNom().equalsIgnoreCase(nom)) {
+				toRemove = e;
+				break;
+			}
+		}
+
+		if (toRemove != null) {
+			personnel.remove(toRemove);
+			JOptionPane.showMessageDialog(null, "Employé supprimé : " + toRemove.getNom());
+		} else {
+			JOptionPane.showMessageDialog(null, "Employé non trouvé.");
+		}
 	}
 
 	private void gererIngredients() {
@@ -112,10 +218,11 @@ public class ConsoleUI {
 		if (nom == null || nom.trim().isEmpty())
 			return;
 
-		String quantiteStr = JOptionPane.showInputDialog("Quantité en stock :");
+		String unite = JOptionPane.showInputDialog("Choix de l'unité :");
+		String quantiteStr = JOptionPane.showInputDialog("Quantité :");
 		int quantite = Integer.parseInt(quantiteStr);
 
-		Ingredient ingredient = new Ingredient(nom, quantite);
+		Ingredient ingredient = new Ingredient(nom, quantite, unite);
 		stockage.ajouterIngredient(ingredient);
 		JOptionPane.showMessageDialog(null, "Ingrédient ajouté : " + ingredient);
 	}
@@ -382,6 +489,16 @@ public class ConsoleUI {
 		for (Client client : clients) {
 			if (client.getNom().equalsIgnoreCase(nom))
 				return client;
+		}
+		return null;
+	}
+
+	private Client trouverClientParTable(Table table) {
+		List<Reservation> reservations = stockage.chargerReservations();
+		for (Reservation r : reservations) {
+			if (r.getTable().getNumero() == table.getNumero()) {
+				return r.getClient();
+			}
 		}
 		return null;
 	}

@@ -5,8 +5,12 @@ import java.util.List;
 
 import observer.Contexte;
 import observer.Observer;
+import state.EnPreparation;
 import state.EtatCommande;
+import state.Livree;
 import state.NouvelleCommande;
+import state.Payee;
+import state.Prete;
 
 public class Commande implements Contexte {
 	private static int compteurId = 1;
@@ -29,7 +33,7 @@ public class Commande implements Contexte {
 	public void ajouterItem(MenuItem item) {
 		items.add(item);
 		calculerMontant();
-		notifyObservers(); // Notifie les observateurs dès qu'on ajoute un item (optionnel)
+		notifyObservers();
 	}
 
 	public double calculerMontant() {
@@ -66,7 +70,18 @@ public class Commande implements Contexte {
 
 	public void setEtat(EtatCommande etat) {
 		this.etat = etat;
-		notifyObservers(); // Notifie les observateurs dès que l'état change
+		notifyObservers();
+	}
+
+	public void setEtatParNom(String nomEtat) {
+		switch (nomEtat.toLowerCase()) {
+		case "nouvelle", "nouvellecommande" -> this.etat = new NouvelleCommande(this);
+		case "en préparation", "en preparation" -> this.etat = new EnPreparation(this);
+		case "prête", "prete" -> this.etat = new Prete(this);
+		case "livrée", "livree" -> this.etat = new Livree(this);
+		case "payée", "payee" -> this.etat = new Payee(this);
+		default -> this.etat = new NouvelleCommande(this);
+		}
 	}
 
 	public void avancerEtat() {
