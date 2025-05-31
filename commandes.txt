@@ -1,0 +1,5 @@
+Jean Dupuis;0601020304;Nouvelle;Burger,Pâtes
+Marie Martin;0605060708;Prête;Salade
+Paul Durant;0603040506;Livrée;Pizza
+Sophie Leroy;0608091011;Nouvelle;Steak frites,Soupe
+Lucie Simon;0612131415;Nouvelle;Omelette

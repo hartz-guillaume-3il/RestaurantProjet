@@ -8,6 +8,10 @@ import java.util.List;
 import java.util.Map;
 
 public class RapportVentes {
+
+	/**
+	 * @param commandes
+	 */
 	public static void genererRapport(List<Commande> commandes) {
 		if (commandes == null || commandes.isEmpty()) {
 			System.out.println("Aucune vente enregistrée.");

@@ -1,0 +1,5 @@
+Serveur;Alice Dupont
+Chef;Bob Martin
+Manager;Chloé Durant
+Serveur;David Leroy
+Serveur;Emma Simon

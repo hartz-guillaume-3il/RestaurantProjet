@@ -29,6 +29,9 @@ public class ConsoleUI {
 	private StockObserver stockObserver;
 	private CuisineObserver cuisineObserver;
 
+	/**
+	 * Constructeur : initialise les données et charge les informations existantes.
+	 */
 	public ConsoleUI() {
 		facade = new RestaurantFacade();
 		stockage = new RestaurantStockage();
@@ -50,6 +53,9 @@ public class ConsoleUI {
 		}
 	}
 
+	/**
+	 * Initialise les tables avec leurs numéros et capacités.
+	 */
 	private void initialiserTables() {
 		tables.clear();
 		tables.add(new Table(1, 4));
@@ -60,6 +66,9 @@ public class ConsoleUI {
 		tables.add(new Table(6, 8));
 	}
 
+	/**
+	 * Lancement de l'interface principale.
+	 */
 	public void lancer() {
 		UIManager.put("OptionPane.messageFont", new Font("Arial", Font.PLAIN, 14));
 		UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.BOLD, 13));
@@ -102,6 +111,9 @@ public class ConsoleUI {
 		JOptionPane.showMessageDialog(null, "Merci d'avoir utilisé notre système. Au revoir !");
 	}
 
+	/**
+	 * Gestion du personnel (affichage, ajout, suppression).
+	 */
 	private void gererPersonnel() {
 		String[] options = { "Afficher Personnel", "Ajouter Employé", "Supprimer Employé", "Retour" };
 		boolean continuer = true;
@@ -119,6 +131,9 @@ public class ConsoleUI {
 		}
 	}
 
+	/**
+	 * Ajoute un employé au personnel.
+	 */
 	private void ajouterEmploye() {
 		String nom = JOptionPane.showInputDialog("Nom de l'employé :");
 		if (nom == null || nom.trim().isEmpty()) {
@@ -145,6 +160,9 @@ public class ConsoleUI {
 		}
 	}
 
+	/**
+	 * Affiche le personnel enregistré.
+	 */
 	private void afficherPersonnel() {
 		if (personnel.isEmpty()) {
 			JOptionPane.showMessageDialog(null, "Aucun employé enregistré.");
@@ -157,6 +175,9 @@ public class ConsoleUI {
 		JOptionPane.showMessageDialog(null, sb.toString());
 	}
 
+	/**
+	 * Supprime un employé du personnel.
+	 */
 	private void supprimerEmploye() {
 		if (personnel.isEmpty()) {
 			JOptionPane.showMessageDialog(null, "Aucun employé à supprimer.");
@@ -183,6 +204,9 @@ public class ConsoleUI {
 		}
 	}
 
+	/**
+	 * Gestion des ingrédients (affichage, ajout, suppression).
+	 */
 	private void gererIngredients() {
 		String[] options = { "Afficher Ingrédients", "Ajouter Ingrédient", "Supprimer Ingrédient", "Retour" };
 		boolean continuer = true;
@@ -200,6 +224,9 @@ public class ConsoleUI {
 		}
 	}
 
+	/**
+	 * Affiche la liste des ingrédients disponibles.
+	 */
 	private void afficherIngredients() {
 		List<Ingredient> ingredients = stockage.getIngredients();
 		if (ingredients.isEmpty()) {
@@ -213,6 +240,9 @@ public class ConsoleUI {
 		JOptionPane.showMessageDialog(null, sb.toString());
 	}
 
+	/**
+	 * Ajoute un ingrédient au stock.
+	 */
 	private void ajouterIngredient() {
 		String nom = JOptionPane.showInputDialog("Nom de l'ingrédient :");
 		if (nom == null || nom.trim().isEmpty())
@@ -227,6 +257,9 @@ public class ConsoleUI {
 		JOptionPane.showMessageDialog(null, "Ingrédient ajouté : " + ingredient);
 	}
 
+	/**
+	 * Supprime un ingrédient du stock.
+	 */
 	private void supprimerIngredient() {
 		String nom = JOptionPane.showInputDialog("Nom de l'ingrédient à supprimer :");
 		if (nom == null || nom.trim().isEmpty())
@@ -248,6 +281,9 @@ public class ConsoleUI {
 		}
 	}
 
+	/**
+	 * Gestion des réservations (création de nouvelles réservations).
+	 */
 	private void gererReservations() {
 		String nom = JOptionPane.showInputDialog("Nom du client :");
 		String tel = JOptionPane.showInputDialog("Téléphone du client :");
@@ -266,6 +302,9 @@ public class ConsoleUI {
 		}
 	}
 
+	/**
+	 * Gestion des commandes (prise de commande, gestion de l'état et paiement).
+	 */
 	private void gererCommandes() {
 		String nomClient = JOptionPane.showInputDialog("Nom du client :");
 		Client client = trouverClientParNom(nomClient);
@@ -307,6 +346,9 @@ public class ConsoleUI {
 		JOptionPane.showMessageDialog(null, "Facture générée :\n" + facture.toString());
 	}
 
+	/**
+	 * Gestion du menu (ajout et affichage des articles).
+	 */
 	private void gererMenu() {
 		boolean continuer = true;
 		while (continuer) {
@@ -316,8 +358,8 @@ public class ConsoleUI {
 					JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
 
 			switch (choix) {
-			case 0 -> ajouterPlat();
-			case 1 -> ajouterEntree();
+			case 0 -> ajouterEntree();
+			case 1 -> ajouterPlat();
 			case 2 -> ajouterDessert();
 			case 3 -> ajouterBoisson();
 			case 4 -> afficherMenu();
@@ -327,6 +369,9 @@ public class ConsoleUI {
 		}
 	}
 
+	/**
+	 * Ajoute un plat au menu.
+	 */
 	private void ajouterPlat() {
 		MenuItem plat = creerMenuItem("Plat", false);
 		if (plat != null) {
@@ -335,6 +380,9 @@ public class ConsoleUI {
 		}
 	}
 
+	/**
+	 * Ajoute une entrée au menu.
+	 */
 	private void ajouterEntree() {
 		MenuItem entree = creerMenuItem("Entrée", false);
 		if (entree != null) {
@@ -343,6 +391,9 @@ public class ConsoleUI {
 		}
 	}
 
+	/**
+	 * Ajoute un dessert au menu.
+	 */
 	private void ajouterDessert() {
 		MenuItem dessert = creerMenuItem("Dessert", false);
 		if (dessert != null) {
@@ -351,6 +402,9 @@ public class ConsoleUI {
 		}
 	}
 
+	/**
+	 * Ajoute une boisson au menu.
+	 */
 	private void ajouterBoisson() {
 		MenuItem boisson = creerMenuItem("Boisson", true);
 		if (boisson != null) {
@@ -359,6 +413,9 @@ public class ConsoleUI {
 		}
 	}
 
+	/**
+	 * Affiche la liste complète des articles du menu.
+	 */
 	private void afficherMenu() {
 		List<MenuItem> menus = stockage.getMenus();
 		if (menus.isEmpty()) {
@@ -373,6 +430,13 @@ public class ConsoleUI {
 		JOptionPane.showMessageDialog(null, sb.toString());
 	}
 
+	/**
+	 * Crée un nouvel article de menu (MenuItem) en fonction du type choisi.
+	 *
+	 * @param type
+	 * @param demandeAlcool
+	 * @return
+	 */
 	private MenuItem creerMenuItem(String type, boolean demandeAlcool) {
 		String nom = JOptionPane.showInputDialog("Nom du " + type + " :");
 		if (nom == null || nom.trim().isEmpty())
@@ -433,6 +497,9 @@ public class ConsoleUI {
 		return MenuItemFactory.createMenuItem(type, nom, prix, description, flag, ingredients);
 	}
 
+	/**
+	 * Permet à l'utilisateur de sélectionner les articles d'une commande.
+	 */
 	private List<MenuItem> saisirItems() {
 		List<MenuItem> items = new ArrayList<>();
 		while (true) {
@@ -450,6 +517,12 @@ public class ConsoleUI {
 		return items;
 	}
 
+	/**
+	 * Recherche un article de menu par son nom.
+	 * 
+	 * @param nom
+	 * @return
+	 */
 	private MenuItem trouverMenuItemParNom(String nom) {
 		for (MenuItem item : stockage.getMenus()) {
 			if (item.getNom().equalsIgnoreCase(nom)) {
@@ -459,6 +532,9 @@ public class ConsoleUI {
 		return null;
 	}
 
+	/**
+	 * Récupère la liste des tables disponibles (non occupées).
+	 */
 	private String getTablesDisponibles() {
 		StringBuilder sb = new StringBuilder();
 		for (Table table : tables) {
@@ -468,6 +544,9 @@ public class ConsoleUI {
 		return sb.length() > 0 ? sb.toString() : "Aucune table disponible";
 	}
 
+	/**
+	 * Récupère la liste des tables actuellement occupées.
+	 */
 	private String getTablesOccupees() {
 		StringBuilder sb = new StringBuilder();
 		for (Table table : tables) {
@@ -477,6 +556,12 @@ public class ConsoleUI {
 		return sb.length() > 0 ? sb.toString() : "Aucune table occupée";
 	}
 
+	/**
+	 * Trouve une table par son numéro.
+	 * 
+	 * @param numero
+	 * @return
+	 */
 	private Table trouverTableParNumero(int numero) {
 		for (Table table : tables) {
 			if (table.getNumero() == numero)
@@ -485,6 +570,12 @@ public class ConsoleUI {
 		return null;
 	}
 
+	/**
+	 * Trouve un client par son nom.
+	 * 
+	 * @param nom
+	 * @return
+	 */
 	private Client trouverClientParNom(String nom) {
 		for (Client client : clients) {
 			if (client.getNom().equalsIgnoreCase(nom))
@@ -493,6 +584,12 @@ public class ConsoleUI {
 		return null;
 	}
 
+	/**
+	 * Trouve le client associé à une table donnée.
+	 * 
+	 * @param table
+	 * @return
+	 */
 	private Client trouverClientParTable(Table table) {
 		List<Reservation> reservations = stockage.chargerReservations();
 		for (Reservation r : reservations) {
@@ -503,6 +600,9 @@ public class ConsoleUI {
 		return null;
 	}
 
+	/**
+	 * Choisit la méthode de paiement pour la commande.
+	 */
 	private PaymentStrategy choisirMethodePaiement() {
 		String[] options = { "Espèces", "Carte bancaire", "Crypto Monnaie", "Virement Paypal" };
 		int choix = JOptionPane.showOptionDialog(null, "Choisissez une méthode de paiement :", "Paiement",
