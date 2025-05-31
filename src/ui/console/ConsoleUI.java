@@ -10,31 +10,31 @@ import model.MenuItem;
 import model.*;
 import observer.StockObserver;
 import observer.CuisineObserver;
+import stockage.RestaurantStockage;
+import factory.MenuItemFactory;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ConsoleUI {
 
 	private RestaurantFacade facade;
+	private RestaurantStockage stockage;
 	private List<Table> tables;
 	private List<Client> clients;
-	private List<MenuItem> menuItems;
 	private StockObserver stockObserver;
 	private CuisineObserver cuisineObserver;
 
 	public ConsoleUI() {
 		facade = new RestaurantFacade();
+		stockage = new RestaurantStockage();
 		tables = new ArrayList<>();
 		clients = new ArrayList<>();
-		menuItems = new ArrayList<>();
 		initialiserTables();
 		stockObserver = new StockObserver();
 		cuisineObserver = new CuisineObserver();
-		chargerMenus();
 	}
 
 	private void initialiserTables() {
@@ -53,7 +53,8 @@ public class ConsoleUI {
 
 		boolean continuer = true;
 		while (continuer) {
-			String[] options = { "Gérer les Réservations", "Gérer les Commandes", "Gérer le Menu", "Quitter" };
+			String[] options = { "Gérer les Réservations", "Gérer les Commandes", "Gérer le Menu", "Gérer le Personnel",
+					"Gérer les Ingrédients", "Quitter" };
 			int choix = JOptionPane.showOptionDialog(null,
 					"Bienvenue dans le Système de Gestion du Restaurant\n\nVeuillez sélectionner une option :",
 					"Menu Principal", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options,
@@ -63,11 +64,81 @@ public class ConsoleUI {
 			case 0 -> gererReservations();
 			case 1 -> gererCommandes();
 			case 2 -> gererMenu();
-			case 3, JOptionPane.CLOSED_OPTION -> continuer = false;
+			case 3 -> gererPersonnel();
+			case 4 -> gererIngredients();
+			case 5, JOptionPane.CLOSED_OPTION -> continuer = false;
 			default -> continuer = false;
 			}
 		}
 		JOptionPane.showMessageDialog(null, "Merci d'avoir utilisé notre système. Au revoir !");
+	}
+
+	private void gererPersonnel() {
+		JOptionPane.showMessageDialog(null, "Fonctionnalité de gestion du personnel à implémenter.");
+	}
+
+	private void gererIngredients() {
+		String[] options = { "Afficher Ingrédients", "Ajouter Ingrédient", "Supprimer Ingrédient", "Retour" };
+		boolean continuer = true;
+		while (continuer) {
+			int choix = JOptionPane.showOptionDialog(null, "Gestion des Ingrédients", "Ingrédients",
+					JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+
+			switch (choix) {
+			case 0 -> afficherIngredients();
+			case 1 -> ajouterIngredient();
+			case 2 -> supprimerIngredient();
+			case 3, JOptionPane.CLOSED_OPTION -> continuer = false;
+			default -> continuer = false;
+			}
+		}
+	}
+
+	private void afficherIngredients() {
+		List<Ingredient> ingredients = stockage.getIngredients();
+		if (ingredients.isEmpty()) {
+			JOptionPane.showMessageDialog(null, "Aucun ingrédient disponible.");
+			return;
+		}
+		StringBuilder sb = new StringBuilder("Ingrédients disponibles :\n");
+		for (Ingredient ingredient : ingredients) {
+			sb.append("- ").append(ingredient).append("\n");
+		}
+		JOptionPane.showMessageDialog(null, sb.toString());
+	}
+
+	private void ajouterIngredient() {
+		String nom = JOptionPane.showInputDialog("Nom de l'ingrédient :");
+		if (nom == null || nom.trim().isEmpty())
+			return;
+
+		String quantiteStr = JOptionPane.showInputDialog("Quantité en stock :");
+		int quantite = Integer.parseInt(quantiteStr);
+
+		Ingredient ingredient = new Ingredient(nom, quantite);
+		stockage.ajouterIngredient(ingredient);
+		JOptionPane.showMessageDialog(null, "Ingrédient ajouté : " + ingredient);
+	}
+
+	private void supprimerIngredient() {
+		String nom = JOptionPane.showInputDialog("Nom de l'ingrédient à supprimer :");
+		if (nom == null || nom.trim().isEmpty())
+			return;
+
+		Ingredient toRemove = null;
+		for (Ingredient ingredient : stockage.getIngredients()) {
+			if (ingredient.getNom().equalsIgnoreCase(nom)) {
+				toRemove = ingredient;
+				break;
+			}
+		}
+
+		if (toRemove != null) {
+			stockage.supprimerIngredient(toRemove);
+			JOptionPane.showMessageDialog(null, "Ingrédient supprimé : " + toRemove.getNom());
+		} else {
+			JOptionPane.showMessageDialog(null, "Ingrédient non trouvé.");
+		}
 	}
 
 	private void gererReservations() {
@@ -152,8 +223,7 @@ public class ConsoleUI {
 	private void ajouterPlat() {
 		MenuItem plat = creerMenuItem("Plat", false);
 		if (plat != null) {
-			menuItems.add(plat);
-			sauvegarderMenus();
+			stockage.ajouterMenu(plat);
 			JOptionPane.showMessageDialog(null, "Plat ajouté : " + plat);
 		}
 	}
@@ -161,8 +231,7 @@ public class ConsoleUI {
 	private void ajouterEntree() {
 		MenuItem entree = creerMenuItem("Entrée", false);
 		if (entree != null) {
-			menuItems.add(entree);
-			sauvegarderMenus();
+			stockage.ajouterMenu(entree);
 			JOptionPane.showMessageDialog(null, "Entrée ajoutée : " + entree);
 		}
 	}
@@ -170,8 +239,7 @@ public class ConsoleUI {
 	private void ajouterDessert() {
 		MenuItem dessert = creerMenuItem("Dessert", false);
 		if (dessert != null) {
-			menuItems.add(dessert);
-			sauvegarderMenus();
+			stockage.ajouterMenu(dessert);
 			JOptionPane.showMessageDialog(null, "Dessert ajouté : " + dessert);
 		}
 	}
@@ -179,10 +247,23 @@ public class ConsoleUI {
 	private void ajouterBoisson() {
 		MenuItem boisson = creerMenuItem("Boisson", true);
 		if (boisson != null) {
-			menuItems.add(boisson);
-			sauvegarderMenus();
+			stockage.ajouterMenu(boisson);
 			JOptionPane.showMessageDialog(null, "Boisson ajoutée : " + boisson);
 		}
+	}
+
+	private void afficherMenu() {
+		List<MenuItem> menus = stockage.getMenus();
+		if (menus.isEmpty()) {
+			JOptionPane.showMessageDialog(null, "Aucun article dans le menu.");
+			return;
+		}
+		StringBuilder sb = new StringBuilder();
+		sb.append("Menu Actuel :\n--------------------------\n");
+		for (MenuItem item : menus) {
+			sb.append("- ").append(item).append("\n");
+		}
+		JOptionPane.showMessageDialog(null, sb.toString());
 	}
 
 	private MenuItem creerMenuItem(String type, boolean demandeAlcool) {
@@ -192,37 +273,57 @@ public class ConsoleUI {
 
 		double prix = Double.parseDouble(JOptionPane.showInputDialog("Prix du " + type + " :"));
 		String description = JOptionPane.showInputDialog("Description :");
-
+		List<Ingredient> ingredients = new ArrayList<>();
+		int ajouter = JOptionPane.showConfirmDialog(null, "Souhaitez-vous ajouter des ingrédients à ce " + type + " ?");
+		if (ajouter == JOptionPane.YES_OPTION) {
+			List<Ingredient> tousLesIngredients = stockage.getIngredients();
+			if (tousLesIngredients.isEmpty()) {
+				JOptionPane.showMessageDialog(null, "Aucun ingrédient disponible pour ajouter !");
+			} else {
+				boolean continuerAjout = true;
+				while (continuerAjout) {
+					StringBuilder sb = new StringBuilder("Ingrédients disponibles :\n");
+					for (Ingredient ingredient : tousLesIngredients) {
+						sb.append("- ").append(ingredient.getNom()).append("\n");
+					}
+					String nomIngredient = JOptionPane.showInputDialog(null,
+							sb.toString() + "\nEntrez le nom d'un ingrédient à ajouter (ou vide pour terminer) :");
+					if (nomIngredient == null || nomIngredient.trim().isEmpty()) {
+						continuerAjout = false;
+					} else {
+						Ingredient ingredientTrouve = null;
+						for (Ingredient ingr : tousLesIngredients) {
+							if (ingr.getNom().equalsIgnoreCase(nomIngredient.trim())) {
+								ingredientTrouve = ingr;
+								break;
+							}
+						}
+						if (ingredientTrouve != null) {
+							ingredients.add(ingredientTrouve);
+							JOptionPane.showMessageDialog(null, "Ingrédient ajouté : " + ingredientTrouve.getNom());
+						} else {
+							JOptionPane.showMessageDialog(null, "Ingrédient non trouvé !");
+						}
+					}
+				}
+			}
+		}
+		boolean flag = false;
 		if (type.equalsIgnoreCase("Boisson")) {
 			int alcoolOption = JOptionPane.showConfirmDialog(null, "Est-ce une boisson alcoolisée ?");
-			boolean alcoolisee = (alcoolOption == JOptionPane.YES_OPTION);
-			return new Boisson(nom, prix, description, alcoolisee);
+			flag = (alcoolOption == JOptionPane.YES_OPTION);
 		} else if (type.equalsIgnoreCase("Dessert")) {
-			int SaleOption = JOptionPane.showConfirmDialog(null, "Le dessert est-il sucré ?");
-			boolean sale = (SaleOption == JOptionPane.YES_OPTION);
-			return new Dessert(nom, prix, description, sale, new ArrayList<>());
+			int sucreOption = JOptionPane.showConfirmDialog(null, "Le dessert est-il sucré ?");
+			flag = (sucreOption == JOptionPane.YES_OPTION);
 		} else if (type.equalsIgnoreCase("Entrée")) {
 			int froideOption = JOptionPane.showConfirmDialog(null, "L'entrée est-elle froide ?");
-			boolean froide = (froideOption == JOptionPane.YES_OPTION);
-			return new Entree(nom, prix, description, froide, new ArrayList<>());
-		} else {
-			int VegeOption = JOptionPane.showConfirmDialog(null, "Le plat est-il végétarien ?");
-			boolean vegetarien = (VegeOption == JOptionPane.YES_OPTION);
-			return new Plat(nom, prix, description, vegetarien, new ArrayList<>());
+			flag = (froideOption == JOptionPane.YES_OPTION);
+		} else if (type.equalsIgnoreCase("Plat")) {
+			int vegeOption = JOptionPane.showConfirmDialog(null, "Le plat est-il végétarien ?");
+			flag = (vegeOption == JOptionPane.YES_OPTION);
 		}
-	}
 
-	private void afficherMenu() {
-		if (menuItems.isEmpty()) {
-			JOptionPane.showMessageDialog(null, "Aucun article dans le menu.");
-			return;
-		}
-		StringBuilder sb = new StringBuilder();
-		sb.append("Menu Actuel :\n--------------------------\n");
-		for (MenuItem item : menuItems) {
-			sb.append("- ").append(item).append("\n");
-		}
-		JOptionPane.showMessageDialog(null, sb.toString());
+		return MenuItemFactory.createMenuItem(type, nom, prix, description, flag, ingredients);
 	}
 
 	private List<MenuItem> saisirItems() {
@@ -243,7 +344,7 @@ public class ConsoleUI {
 	}
 
 	private MenuItem trouverMenuItemParNom(String nom) {
-		for (MenuItem item : menuItems) {
+		for (MenuItem item : stockage.getMenus()) {
 			if (item.getNom().equalsIgnoreCase(nom)) {
 				return item;
 			}
@@ -298,50 +399,4 @@ public class ConsoleUI {
 		default -> new EspecePaiement();
 		};
 	}
-
-	private void sauvegarderMenus() {
-		try (BufferedWriter writer = new BufferedWriter(new FileWriter("menus.txt"))) {
-			for (MenuItem menu : menuItems) {
-				writer.write(menu.getType() + ";" + menu.getNom() + ";" + menu.getPrix() + ";" + menu.getDescription());
-				writer.newLine();
-			}
-		} catch (IOException e) {
-			System.err.println("Erreur lors de la sauvegarde des menus : " + e.getMessage());
-		}
-	}
-
-	private void chargerMenus() {
-		File fichier = new File("menus.txt");
-		if (!fichier.exists()) {
-			System.err.println("Fichier menus.txt introuvable !");
-			return;
-		}
-		try (BufferedReader reader = new BufferedReader(new FileReader(fichier))) {
-			String ligne;
-			while ((ligne = reader.readLine()) != null) {
-				String[] parties = ligne.split(";");
-				if (parties.length >= 4) {
-					String type = parties[0].trim();
-					String nom = parties[1].trim();
-					double prix = Double.parseDouble(parties[2].trim());
-					String description = parties[3].trim();
-
-					MenuItem item = null;
-					switch (type) {
-					case "Plat" -> item = new Plat(nom, prix, description, false, new ArrayList<>());
-					case "Entrée" -> item = new Entree(nom, prix, description, false, new ArrayList<>());
-					case "Dessert" -> item = new Dessert(nom, prix, description, false, new ArrayList<>());
-					case "Boisson" -> item = new Boisson(nom, prix, description, false);
-					}
-
-					if (item != null) {
-						menuItems.add(item);
-					}
-				}
-			}
-		} catch (IOException | NumberFormatException e) {
-			System.err.println("Erreur lors du chargement des menus : " + e.getMessage());
-		}
-	}
-
 }

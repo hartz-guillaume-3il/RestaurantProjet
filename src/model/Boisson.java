@@ -1,15 +1,17 @@
 package model;
 
-public class Boisson extends MenuItem {
-	private boolean alcoolisee; // true = alcoolisée, false = non alcoolisée
+import java.util.List;
 
-	// Constructeur principal
-	public Boisson(String nom, double prix, String description, boolean alcoolisee) {
+public class Boisson extends MenuItem {
+	private boolean alcoolisee;
+	private List<Ingredient> ingredients; 
+
+	public Boisson(String nom, double prix, String description, boolean alcoolisee, List<Ingredient> ingredients) {
 		super(nom, prix, description);
 		this.alcoolisee = alcoolisee;
+		this.ingredients = ingredients;
 	}
 
-	// Constructeur depuis une ligne du fichier
 	public Boisson(String ligne) {
 		super(ligne);
 		String[] parties = ligne.split(";");
@@ -22,6 +24,14 @@ public class Boisson extends MenuItem {
 
 	public void setAlcoolisee(boolean alcoolisee) {
 		this.alcoolisee = alcoolisee;
+	}
+
+	public List<Ingredient> getIngredients() {
+		return ingredients;
+	}
+
+	public void setIngredients(List<Ingredient> ingredients) {
+		this.ingredients = ingredients;
 	}
 
 	@Override
