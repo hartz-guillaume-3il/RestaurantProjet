@@ -1,41 +1,82 @@
 
-RestaurantProjet - Gestion de restaurant avec Java
+# 🍽️ RestaurantProjet - Gestion de restaurant en Java
 
-Ce projet illustre l'utilisation de quatre design patterns classiques dans le contexte de la gestion d'un restaurant :
-- Strategy : permet de changer dynamiquement les stratégies de traitement (exemple : choix du mode de paiement).
-- State : gère les états d'un objet (exemple : statut d'une commande).
-- Decorator : ajoute des fonctionnalités supplémentaires aux objets (exemple : options d'une commande).
-- Façade : fournit une interface simplifiée pour interagir avec un système complexe (exemple : interactions entre les différentes classes du restaurant).
+**RestaurantProjet** est un projet Java qui illustre l’utilisation de quatre **design patterns** classiques : **Strategy**, **State**, **Decorator**, et **Façade**. Le projet met en œuvre ces patterns pour gérer de manière flexible et propre les fonctionnalités d’un restaurant (commandes, états, options, paiements, etc.).
 
-Technologies utilisées :
-- Langage : Java
-- Paradigmes : Programmation orientée objet, patterns de conception
+---
 
-Fonctionnalités :
-- Gestion des commandes selon leur état.
-- Ajout dynamique de fonctionnalités (comme des extras à un plat).
-- Choix de stratégies de paiement interchangeables.
-- Interface simplifiée pour le client via le pattern Façade.
+## 📦 Fonctionnalités principales
 
-Structure du projet :
-RestaurantProjet/
-- src/
-  - strategy/
-  - state/
-  - decorator/
-  - facade/
-  - Application.java
-- diagramme.png
-- README.md
+- 🔄 **Gestion des commandes** et de leurs différents états (en préparation, servie, terminée...).
+- ➕ **Ajout dynamique d’options** à un plat (par exemple, sauces, suppléments...).
+- 💳 **Choix de stratégies de paiement** interchangeables (carte bancaire, PayPal...).
+- 🛠️ **Interface simplifiée** grâce au pattern **Façade**.
 
-Exécution :
-1. Importer le projet dans votre IDE Java préféré (Eclipse, IntelliJ, NetBeans...).
-2. Compiler les classes.
-3. Exécuter la classe Application.java pour tester les fonctionnalités.
+---
 
-Auteur(e)s :
-- Hartz Guillaume
-- Rahou Hind
+## 🏗️ Technologies utilisées
 
-Licence :
-Consultez le fichier LICENSE pour plus d'informations.
+- **Langage** : Java  
+- **Paradigme** : Programmation orientée objet, patterns de conception  
+- **Structure du projet** :
+  ```
+  RestaurantProjet/
+  ├── src/
+  │   ├── decorator/
+  │   ├── facade/
+  │   ├── factory/
+  │   ├── Main/
+  │   ├── model/
+  │   ├── observer/
+  │   ├── reporting/
+  │   ├── state/
+  │   ├── stockage/
+  │   ├── strategy/
+  │   └── ui.console/
+  ├── diagramme.png
+  ├── menus.txt
+  ├── ingredients.txt
+  ├── commandes.txt
+  ├── personnels.txt
+  ├── reservations.txt
+  ├── diagramme.png
+  ├── README.md
+  └── LICENSE
+  ```
+
+---
+
+## 🏃‍♂️ Lancer le projet
+
+1️⃣ **Importer** le projet dans votre IDE Java préféré (Eclipse, IntelliJ, NetBeans…).  
+2️⃣ **Compiler** les classes.  
+3️⃣ **Exécuter** la classe `Application.java` pour découvrir les fonctionnalités.
+
+---
+
+## 🖼️ Diagramme UML
+
+Le diagramme des patterns est disponible dans le fichier `diagramme.png` pour visualiser les interactions et l’architecture globale.
+
+---
+
+## 👥 Auteurs
+
+- **Hartz Guillaume**
+- **Rahou Hind**
+
+---
+
+## 📜 Licence
+
+Consultez le fichier [`LICENSE`](LICENSE) pour plus d’informations.
+
+---
+
+## 🚀 Pourquoi ce projet ?
+
+Le projet **RestaurantProjet** a été conçu pour démontrer l’articulation et l’utilité de plusieurs patterns de conception (**Strategy**, **State**, **Decorator**, **Façade**) dans un scénario concret de gestion de restaurant. Il offre une base solide pour explorer les concepts de modularité, de flexibilité et de lisibilité dans le développement Java.
+
+---
+
+🎉 N’hésitez pas à cloner le dépôt, l’exécuter et expérimenter avec les différentes stratégies et états pour voir toute la puissance de ces patterns en action ! 🍝
