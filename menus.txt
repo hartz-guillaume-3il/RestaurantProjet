@@ -1,20 +1,20 @@
-Boisson;Bière blonde;4.5;Bière légère, houblonnée;true
-Boisson;Jus de pomme;3.0;Pur jus de pommes fraîches;false
-Boisson;Cocktail maison;6.5;Mélange de fruits exotiques et de rhum;true
-Boisson;Eau plate;1.5;Eau de source;false
-Entrée;Soupe de légumes;4.0;Soupe chaude aux légumes de saison;false
-Entrée;Carpaccio de bœuf;7.0;Fines tranches de bœuf avec parmesan et roquette;false
-Entrée;Salade César;5.5;Salade verte, poulet, croûtons, sauce César;true
-Entrée;Assiette de crudités;4.5;Mélange de légumes crus, sauce yaourt;true
-Plat;Poulet rôti;12.0;Poulet fermier rôti, pommes de terre fondantes;false
-Plat;Lasagnes végétariennes;11.5;Lasagnes aux légumes, sauce tomate maison;true
-Plat;Bœuf bourguignon;13.0;Bœuf mijoté au vin rouge, carottes, champignons;false
-Plat;Curry de légumes;9.0;Légumes de saison, sauce curry doux;true
-Dessert;Tarte aux pommes;4.0;Pâte croustillante, pommes caramélisées;true
-Dessert;Cheesecake au citron;5.0;Cheesecake crémeux au citron, spéculoos;true
-Dessert;Assiette de fromages;6.0;Sélection de fromages affinés;false
-Dessert;Mousse au chocolat;4.5;Chocolat noir intense et crème fouettée;true
-Entrée;Salade verte;2.5;Salade verte avec une vignaigrette;true
-Plat;Pizza;12.0;Chèvres miel;false
-Dessert;Pana cotta;4.5;Pana cotta avec coulis de fruit de saison;true
-Boisson;Virgin morito;6.5;Menthe fraiche;false
+Boisson;Bière blonde;4.5;Bière légère, houblonnée;true;Eau, Houblon, Malt
+Boisson;Jus de pomme;3.0;Pur jus de pommes fraîches;false;Pommes
+Boisson;Cocktail maison;6.5;Mélange de fruits exotiques et de rhum;true;Ananas, Mangue, Rhum, Menthe
+Boisson;Eau plate;1.5;Eau de source;false;Eau
+Entrée;Soupe de légumes;4.0;Soupe chaude aux légumes de saison;false;Carottes, Poireaux, Pommes de terre
+Entrée;Carpaccio de bœuf;7.0;Fines tranches de bœuf avec parmesan et roquette;false;Bœuf, Parmesan, Roquette
+Entrée;Salade César;5.5;Salade verte, poulet, croûtons, sauce César;true;Salade, Poulet, Croûtons, Sauce César
+Entrée;Assiette de crudités;4.5;Mélange de légumes crus, sauce yaourt;true;Carottes, Concombre, Radis, Sauce yaourt
+Plat;Poulet rôti;12.0;Poulet fermier rôti, pommes de terre fondantes;false;Poulet, Pommes de terre, Herbes
+Plat;Lasagnes végétariennes;11.5;Lasagnes aux légumes, sauce tomate maison;true;Pâtes à lasagnes, Courgettes, Carottes, Sauce tomate
+Plat;Bœuf bourguignon;13.0;Bœuf mijoté au vin rouge, carottes, champignons;false;Bœuf, Carottes, Champignons, Vin rouge
+Plat;Curry de légumes;9.0;Légumes de saison, sauce curry doux;true;Carottes, Courgettes, Curry, Crème
+Dessert;Tarte aux pommes;4.0;Pâte croustillante, pommes caramélisées;true;Pommes, Pâte brisée, Sucre
+Dessert;Cheesecake au citron;5.0;Cheesecake crémeux au citron, spéculoos;true;Fromage frais, Citron, Spéculoos
+Dessert;Assiette de fromages;6.0;Sélection de fromages affinés;false;Fromages variés
+Dessert;Mousse au chocolat;4.5;Chocolat noir intense et crème fouettée;true;Chocolat noir, Crème
+Entrée;Salade verte;2.5;Salade verte avec une vinaigrette;true;Salade, Vinaigrette
+Plat;Pizza;12.0;Chèvres miel;false;Pâte à pizza, Fromage de chèvre, Miel
+Dessert;Pana cotta;4.5;Pana cotta avec coulis de fruit de saison;true;Crème, Sucre, Coulis de fruit
+Boisson;Virgin morito;6.5;Menthe fraîche;false;Menthe, Citron vert, Eau gazeuse
