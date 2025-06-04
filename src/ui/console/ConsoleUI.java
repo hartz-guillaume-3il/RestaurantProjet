@@ -37,13 +37,19 @@ public class ConsoleUI {
 		stockage = new RestaurantStockage();
 		tables = new ArrayList<>();
 		clients = new ArrayList<>();
+
+		stockage.chargerCommandes();
+		commandes = stockage.getCommandes();
+
+		stockage.chargerReservations();
+		List<Reservation> reservations = stockage.getReservations();
+
 		personnel = stockage.chargerPersonnel();
-		commandes = stockage.chargerCommandes();
 		initialiserTables();
+
 		stockObserver = new StockObserver();
 		cuisineObserver = new CuisineObserver();
 
-		List<Reservation> reservations = stockage.chargerReservations();
 		for (Reservation r : reservations) {
 			clients.add(r.getClient());
 			Table table = trouverTableParNumero(r.getTable().getNumero());
@@ -78,7 +84,7 @@ public class ConsoleUI {
 			String[] options = { "Gérer les Réservations", "Gérer les Commandes", "Gérer le Menu", "Gérer le Personnel",
 					"Gérer les Ingrédients", "Quitter" };
 			int choix = JOptionPane.showOptionDialog(null,
-					"Bienvenue dans le Système de Gestion du Restaurant\\n\\nVeuillez sélectionner une option :",
+					"Bienvenue dans le Système de Gestion du Restaurant\n\nVeuillez sélectionner une option :",
 					"Menu Principal", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options,
 					options[0]);
 
@@ -291,14 +297,24 @@ public class ConsoleUI {
 		clients.add(client);
 
 		String tablesDispo = getTablesDisponibles();
-		String numeroStr = JOptionPane.showInputDialog("Tables disponibles :\n" + tablesDispo + "\nNuméro de table :");
-		int numero = Integer.parseInt(numeroStr);
-		Table table = trouverTableParNumero(numero);
-
-		if (table != null && facade.reserverTable(table, client)) {
-			JOptionPane.showMessageDialog(null, "Réservation réussie !");
-		} else {
-			JOptionPane.showMessageDialog(null, "Échec de la réservation.");
+		try {
+			String numeroStr = JOptionPane
+					.showInputDialog("Tables disponibles :\n" + tablesDispo + "\nNuméro de table :");
+			if (numeroStr == null || numeroStr.trim().isEmpty()) {
+				JOptionPane.showMessageDialog(null, "Numéro de table invalide.");
+				return;
+			}
+			int numero = Integer.parseInt(numeroStr);
+			Table table = trouverTableParNumero(numero);
+			if (table != null && facade.reserverTable(table, client)) {
+				Reservation reservation = new Reservation(client, table);
+				stockage.getReservations().add(reservation);
+				JOptionPane.showMessageDialog(null, "Réservation réussie !");
+			} else {
+				JOptionPane.showMessageDialog(null, "Échec de la réservation.");
+			}
+		} catch (NumberFormatException e) {
+			JOptionPane.showMessageDialog(null, "Veuillez entrer un numéro de table valide.");
 		}
 	}
 
@@ -333,7 +349,7 @@ public class ConsoleUI {
 		do {
 			etatChoisi = JOptionPane.showOptionDialog(null,
 					"État actuel : " + commande.getEtat().getNomEtat() + "\nSélectionnez le prochain état :",
-			     	"Modification de l'état de la commande", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE,
+					"Modification de l'état de la commande", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE,
 					null, etats, etats[0]);
 
 			if (etatChoisi >= 0 && !commande.getEtat().getNomEtat().equals("Payée")) {
@@ -550,8 +566,12 @@ public class ConsoleUI {
 	private String getTablesOccupees() {
 		StringBuilder sb = new StringBuilder();
 		for (Table table : tables) {
-			if (table.isOccupee())
-				sb.append(table).append("\n");
+			if (table.isOccupee()) {
+				Client client = trouverClientParTable(table);
+				String nomClient = (client != null) ? client.getNom() : "Inconnu";
+				sb.append("Table ").append(table.getNumero()).append(" (Capacité: ").append(table.getCapacite())
+						.append(", Réservée par: ").append(nomClient).append(")\n");
+			}
 		}
 		return sb.length() > 0 ? sb.toString() : "Aucune table occupée";
 	}
@@ -591,8 +611,7 @@ public class ConsoleUI {
 	 * @return
 	 */
 	private Client trouverClientParTable(Table table) {
-		List<Reservation> reservations = stockage.chargerReservations();
-		for (Reservation r : reservations) {
+		for (Reservation r : stockage.getReservations()) {
 			if (r.getTable().getNumero() == table.getNumero()) {
 				return r.getClient();
 			}

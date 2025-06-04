@@ -8,6 +8,8 @@ import java.util.List;
 public class RestaurantStockage {
 	private List<MenuItem> menus;
 	private List<Ingredient> ingredients;
+	private List<Reservation> reservations;
+	private List<Commande> commandes;
 	private final String fichierSauvegardeMenus = "menus.txt";
 	private final String fichierSauvegardeIngredients = "ingredients.txt";
 	private static final String fichierSauvegardeCommandes = "commandes.txt";
@@ -17,8 +19,13 @@ public class RestaurantStockage {
 	public RestaurantStockage() {
 		this.menus = new ArrayList<>();
 		this.ingredients = new ArrayList<>();
+		this.commandes = new ArrayList<>();
+		this.reservations = new ArrayList<>();
+
 		chargerMenus();
 		chargerIngredients();
+		chargerCommandes();
+		chargerReservations();
 	}
 
 	public void ajouterMenu(MenuItem menu) {
@@ -116,7 +123,7 @@ public class RestaurantStockage {
 	private void sauvegarderIngredients() {
 		try (BufferedWriter writer = new BufferedWriter(new FileWriter(fichierSauvegardeIngredients))) {
 			for (Ingredient ingredient : ingredients) {
-				writer.write(ingredient.getNom() + ";" + ingredient.getQuantiteStock());
+				writer.write(ingredient.getNom() + ";" + ingredient.getQuantiteStock() + ";" + ingredient.getUnite());
 				writer.newLine();
 			}
 		} catch (IOException e) {
@@ -132,15 +139,15 @@ public class RestaurantStockage {
 		try (BufferedReader reader = new BufferedReader(new FileReader(fichier))) {
 			String ligne;
 			while ((ligne = reader.readLine()) != null) {
-				String[] parties = ligne.split(";");
-				if (parties.length == 3) {
-					String nom = parties[0].trim();
-					int quantite = Integer.parseInt(parties[1].trim());
-					String unite = parties[2].trim();
+				String[] parts = ligne.split(";");
+				if (parts.length >= 2) {
+					String nom = parts[0].trim();
+					int quantite = Integer.parseInt(parts[1].trim());
+					String unite = parts.length >= 3 ? parts[2].trim() : "";
 					ingredients.add(new Ingredient(nom, quantite, unite));
 				}
 			}
-		} catch (IOException | NumberFormatException e) {
+		} catch (IOException e) {
 			System.err.println("Erreur lors du chargement des ingrédients : " + e.getMessage());
 		}
 	}
@@ -149,15 +156,15 @@ public class RestaurantStockage {
 		try (BufferedWriter writer = new BufferedWriter(new FileWriter(fichierSauvegardeCommandes))) {
 			for (Commande c : commandes) {
 				StringBuilder sb = new StringBuilder();
-				sb.append(c.getClient().getNom()).append(";");
-				sb.append(c.getClient().getTelephone()).append(";");
-				sb.append(c.getEtat().getNomEtat()).append(";");
+				sb.append(c.getClient().getNom()).append(";").append(c.getClient().getTelephone()).append(";")
+						.append(c.getEtat().getNomEtat()).append(";");
 
 				for (int i = 0; i < c.getItems().size(); i++) {
 					sb.append(c.getItems().get(i).getNom());
 					if (i != c.getItems().size() - 1)
 						sb.append(",");
 				}
+
 				writer.write(sb.toString());
 				writer.newLine();
 			}
@@ -166,36 +173,32 @@ public class RestaurantStockage {
 		}
 	}
 
-	public List<Commande> chargerCommandes() {
-		List<Commande> commandes = new ArrayList<>();
+	public void chargerCommandes() {
 		File fichier = new File(fichierSauvegardeCommandes);
+		commandes.clear();
+
 		if (!fichier.exists())
-			return commandes;
+			return;
 
 		try (BufferedReader reader = new BufferedReader(new FileReader(fichier))) {
 			String ligne;
 			while ((ligne = reader.readLine()) != null) {
-				String[] parties = ligne.split(";");
-				if (parties.length >= 4) {
-					String nomClient = parties[0].trim();
-					String telClient = parties[1].trim();
-					String etat = parties[2].trim();
-					String[] nomsItems = parties[3].split(",");
+				String[] parts = ligne.split(";");
+				if (parts.length == 4) {
+					String nomClient = parts[0].trim();
+					String telClient = parts[1].trim();
+					String etat = parts[2].trim();
+					String[] nomsItems = parts[3].split(",");
 
 					Client client = new Client(nomClient, telClient);
-					List<MenuItem> items = new ArrayList<>();
+					Commande commande = new Commande(client, null);
+
 					for (String nom : nomsItems) {
 						MenuItem item = trouverMenuItemParNom(nom);
 						if (item != null)
-							items.add(item);
-						else
-							items.add(new Plat(nom, 0, "Inconnu", false, new ArrayList<>()));
+							commande.ajouterItem(item);
 					}
 
-					Commande commande = new Commande(client, null);
-					for (MenuItem item : items) {
-						commande.ajouterItem(item);
-					}
 					commande.setEtatParNom(etat);
 					commandes.add(commande);
 				}
@@ -203,8 +206,6 @@ public class RestaurantStockage {
 		} catch (IOException e) {
 			System.err.println("Erreur lors du chargement des commandes : " + e.getMessage());
 		}
-
-		return commandes;
 	}
 
 	private MenuItem trouverMenuItemParNom(String nom) {
@@ -227,22 +228,23 @@ public class RestaurantStockage {
 		}
 	}
 
-	public List<Reservation> chargerReservations() {
-		List<Reservation> reservations = new ArrayList<>();
+	public void chargerReservations() {
 		File fichier = new File(fichierSauvegardeReservations);
+		reservations.clear();
+
 		if (!fichier.exists())
-			return reservations;
+			return;
 
 		try (BufferedReader reader = new BufferedReader(new FileReader(fichier))) {
 			String ligne;
 			while ((ligne = reader.readLine()) != null) {
-				String[] parties = ligne.split(";");
-				if (parties.length == 3) {
-					String nomClient = parties[0].trim();
-					String telClient = parties[1].trim();
-					int numeroTable = Integer.parseInt(parties[2].trim());
+				String[] parts = ligne.split(";");
+				if (parts.length == 3) {
+					String nom = parts[0].trim();
+					String tel = parts[1].trim();
+					int numeroTable = Integer.parseInt(parts[2].trim());
 
-					Client client = new Client(nomClient, telClient);
+					Client client = new Client(nom, tel);
 					Table table = new Table(numeroTable, 4);
 					reservations.add(new Reservation(client, table));
 				}
@@ -250,8 +252,6 @@ public class RestaurantStockage {
 		} catch (IOException e) {
 			System.err.println("Erreur lors du chargement des réservations : " + e.getMessage());
 		}
-
-		return reservations;
 	}
 
 	public void sauvegarderPersonnel(List<Employe> personnel) {
@@ -295,6 +295,30 @@ public class RestaurantStockage {
 		}
 
 		return personnel;
+	}
+
+	public List<Reservation> getReservations() {
+		return reservations;
+	}
+
+	public void setReservations(List<Reservation> reservations) {
+		this.reservations = reservations;
+	}
+
+	public List<Commande> getCommandes() {
+		return commandes;
+	}
+
+	public void setCommandes(List<Commande> commandes) {
+		this.commandes = commandes;
+	}
+
+	public void setMenus(List<MenuItem> menus) {
+		this.menus = menus;
+	}
+
+	public void setIngredients(List<Ingredient> ingredients) {
+		this.ingredients = ingredients;
 	}
 
 }
