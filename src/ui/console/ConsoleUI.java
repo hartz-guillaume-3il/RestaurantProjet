@@ -12,7 +12,7 @@ import observer.StockObserver;
 import observer.CuisineObserver;
 import stockage.RestaurantStockage;
 import factory.MenuItemFactory;
-
+import decorator.TVAFactureDecorator;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -76,50 +76,37 @@ public class ConsoleUI {
 	 * Lancement de l'interface principale.
 	 */
 	public void lancer() {
-	    UIManager.put("OptionPane.messageFont", new Font("Arial", Font.PLAIN, 14));
-	    UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.BOLD, 13));
+		UIManager.put("OptionPane.messageFont", new Font("Arial", Font.PLAIN, 14));
+		UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.BOLD, 13));
 
-	    boolean continuer = true;
-	    while (continuer) {
-	        String[] options = {
-	            "Gérer les Réservations", 
-	            "Gérer les Commandes", 
-	            "Gérer le Menu", 
-	            "Gérer le Personnel",
-	            "Gérer les Ingrédients", 
-	            "Quitter"
-	        };
-	        
-	        int choix = JOptionPane.showOptionDialog(
-	            null,
-	            "Bienvenue dans le Système de Gestion du Restaurant\n\nVeuillez sélectionner une option :",
-	            "Menu Principal",
-	            JOptionPane.DEFAULT_OPTION,
-	            JOptionPane.INFORMATION_MESSAGE,
-	            null,
-	            options,
-	            options[0]
-	        );
+		boolean continuer = true;
+		while (continuer) {
+			String[] options = { "Gérer les Réservations", "Gérer les Commandes", "Gérer le Menu", "Gérer le Personnel",
+					"Gérer les Ingrédients", "Quitter" };
 
-	        switch (choix) {
-	            case 0 -> gererReservations();
-	            case 1 -> gererCommandes();
-	            case 2 -> gererMenu();
-	            case 3 -> gererPersonnel();
-	            case 4 -> gererIngredients();
-	            case 5, JOptionPane.CLOSED_OPTION -> continuer = false;
-	            default -> continuer = false;
-	        }
-	    }
+			int choix = JOptionPane.showOptionDialog(null,
+					"Bienvenue dans le Système de Gestion du Restaurant\n\nVeuillez sélectionner une option :",
+					"Menu Principal", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options,
+					options[0]);
 
-	    stockage.sauvegarderPersonnel(personnel);
-	    stockage.sauvegarderReservations();
-	    stockage.sauvegarderCommandes();
-	    stockage.sauvegarderIngredients();
+			switch (choix) {
+			case 0 -> gererReservations();
+			case 1 -> gererCommandes();
+			case 2 -> gererMenu();
+			case 3 -> gererPersonnel();
+			case 4 -> gererIngredients();
+			case 5, JOptionPane.CLOSED_OPTION -> continuer = false;
+			default -> continuer = false;
+			}
+		}
 
-	    JOptionPane.showMessageDialog(null, "Merci d'avoir utilisé notre système. Au revoir !");
+		stockage.sauvegarderPersonnel(personnel);
+		stockage.sauvegarderReservations();
+		stockage.sauvegarderCommandes();
+		stockage.sauvegarderIngredients();
+
+		JOptionPane.showMessageDialog(null, "Merci d'avoir utilisé notre système. Au revoir !");
 	}
-
 
 	/**
 	 * Gestion du personnel (affichage, ajout, suppression).
@@ -363,7 +350,21 @@ public class ConsoleUI {
 
 		PaymentStrategy strategy = choisirMethodePaiement();
 		Facture facture = facade.payerCommande(commande, strategy);
-		JOptionPane.showMessageDialog(null, "Facture générée :\n" + facture.toString());
+		Facture factureAvecTVA = new TVAFactureDecorator(facture);
+		factureAvecTVA.setPayee(true);
+
+		StringBuilder message = new StringBuilder();
+		message.append("----- Facture -----\n");
+		message.append(facture.getCommande().toString()).append("\n");
+		double tva = facture.getMontantAPayer() * 0.20;
+		double montantTTC = factureAvecTVA.getMontantAPayer();
+		message.append("Montant HT : ").append(facture.getMontantAPayer()).append(" €\n");
+		message.append("TVA (20%) : ").append(String.format("%.2f", tva)).append(" €\n");
+		message.append("Montant TTC : ").append(String.format("%.2f", montantTTC)).append(" €\n");
+		message.append("Statut : Payée");
+
+		JOptionPane.showMessageDialog(null, message.toString(), "Facture avec TVA", JOptionPane.INFORMATION_MESSAGE);
+
 	}
 
 	/**

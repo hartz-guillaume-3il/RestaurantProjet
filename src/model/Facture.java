@@ -3,8 +3,8 @@ package model;
 import observer.Observer;
 
 public class Facture implements Observer {
-	private Commande commande;
-	private double montantAPayer;
+	protected Commande commande;
+	protected double montantAPayer;
 	private boolean payee;
 
 	public Facture(Commande commande, double montantAPayer) {
