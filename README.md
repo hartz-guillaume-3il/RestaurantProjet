@@ -50,7 +50,7 @@
 
 1️⃣ **Importer** le projet dans votre IDE Java préféré (Eclipse, IntelliJ, NetBeans…).  
 2️⃣ **Compiler** les classes.  
-3️⃣ **Exécuter** la classe `Application.java` pour découvrir les fonctionnalités.
+3️⃣ **Exécuter** la classe `ConsoleUI.java` pour découvrir les fonctionnalités.
 
 ---
 
