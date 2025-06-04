@@ -1,6 +1,11 @@
+<<<<<<< Updated upstream
 /ui/
 /Main/
 /stockage/
 /model/
 /factory/
 /reporting/
+=======
+/factory/
+/observer/
+>>>>>>> Stashed changes

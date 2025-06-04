@@ -3,6 +3,7 @@ package observer;
 import model.Commande;
 import model.MenuItem;
 
+// la cuisine est notifiée d'une nouvelle commande
 public class CuisineObserver implements Observer {
 
 	@Override

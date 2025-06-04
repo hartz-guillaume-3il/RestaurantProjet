@@ -11,6 +11,7 @@ import java.util.List;
 
 public class RestaurantFacade {
 
+	 // Méthode pour créer une commande : elle assemble le client, la table et les plats choisis
 	public Commande prendreCommande(Client client, Table table, List<MenuItem> items) {
 		Commande commande = new Commande(client, table);
 		for (MenuItem item : items) {

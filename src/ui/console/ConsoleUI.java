@@ -333,7 +333,7 @@ public class ConsoleUI {
 		do {
 			etatChoisi = JOptionPane.showOptionDialog(null,
 					"État actuel : " + commande.getEtat().getNomEtat() + "\nSélectionnez le prochain état :",
-					"Modification de l'état de la commande", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE,
+			     	"Modification de l'état de la commande", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE,
 					null, etats, etats[0]);
 
 			if (etatChoisi >= 0 && !commande.getEtat().getNomEtat().equals("Payée")) {
