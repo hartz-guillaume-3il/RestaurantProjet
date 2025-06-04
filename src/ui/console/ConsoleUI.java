@@ -247,11 +247,15 @@ public class ConsoleUI {
 
 		String unite = JOptionPane.showInputDialog("Choix de l'unité :");
 		String quantiteStr = JOptionPane.showInputDialog("Quantité :");
-		int quantite = Integer.parseInt(quantiteStr);
 
-		Ingredient ingredient = new Ingredient(nom, quantite, unite);
-		stockage.ajouterIngredient(ingredient);
-		JOptionPane.showMessageDialog(null, "Ingrédient ajouté : " + ingredient);
+		try {
+			int quantite = Integer.parseInt(quantiteStr);
+			Ingredient ingredient = new Ingredient(nom, quantite, unite);
+			stockage.ajouterIngredient(ingredient);
+			JOptionPane.showMessageDialog(null, "Ingrédient ajouté : " + ingredient);
+		} catch (NumberFormatException e) {
+			JOptionPane.showMessageDialog(null, "Quantité invalide. Veuillez entrer un nombre.");
+		}
 	}
 
 	/**
@@ -283,18 +287,29 @@ public class ConsoleUI {
 	 */
 	private void gererReservations() {
 		String nom = JOptionPane.showInputDialog("Nom du client :");
+		if (nom == null || nom.trim().isEmpty()) {
+			JOptionPane.showMessageDialog(null, "Nom invalide.");
+			return;
+		}
+
 		String tel = JOptionPane.showInputDialog("Téléphone du client :");
+		if (tel == null || tel.trim().isEmpty()) {
+			JOptionPane.showMessageDialog(null, "Téléphone invalide.");
+			return;
+		}
+
 		Client client = new Client(nom, tel);
 		clients.add(client);
 
 		String tablesDispo = getTablesDisponibles();
+		String numeroStr = JOptionPane.showInputDialog("Tables disponibles :\n" + tablesDispo + "\nNuméro de table :");
+
+		if (numeroStr == null || numeroStr.trim().isEmpty()) {
+			JOptionPane.showMessageDialog(null, "Numéro de table invalide.");
+			return;
+		}
+
 		try {
-			String numeroStr = JOptionPane
-					.showInputDialog("Tables disponibles :\n" + tablesDispo + "\nNuméro de table :");
-			if (numeroStr == null || numeroStr.trim().isEmpty()) {
-				JOptionPane.showMessageDialog(null, "Numéro de table invalide.");
-				return;
-			}
 			int numero = Integer.parseInt(numeroStr);
 			Table table = trouverTableParNumero(numero);
 			if (table != null && facade.reserverTable(table, client)) {
@@ -314,6 +329,9 @@ public class ConsoleUI {
 	 */
 	private void gererCommandes() {
 		String nomClient = JOptionPane.showInputDialog("Nom du client :");
+		if (nomClient == null || nomClient.trim().isEmpty())
+			return;
+
 		Client client = trouverClientParNom(nomClient);
 		if (client == null) {
 			JOptionPane.showMessageDialog(null, "Client non trouvé.");
@@ -322,8 +340,21 @@ public class ConsoleUI {
 
 		String tablesOccupees = getTablesOccupees();
 		String numeroStr = JOptionPane.showInputDialog("Tables occupées :\n" + tablesOccupees + "\nNuméro de table :");
-		int numero = Integer.parseInt(numeroStr);
-		Table table = trouverTableParNumero(numero);
+
+		if (numeroStr == null || numeroStr.trim().isEmpty()) {
+			JOptionPane.showMessageDialog(null, "Numéro invalide.");
+			return;
+		}
+
+		Table table = null;
+		try {
+			int numero = Integer.parseInt(numeroStr);
+			table = trouverTableParNumero(numero);
+		} catch (NumberFormatException e) {
+			JOptionPane.showMessageDialog(null, "Veuillez entrer un numéro valide.");
+			return;
+		}
+
 		if (table == null || !table.isOccupee()) {
 			JOptionPane.showMessageDialog(null, "Table non trouvée ou non occupée.");
 			return;
@@ -364,7 +395,6 @@ public class ConsoleUI {
 		message.append("Statut : Payée");
 
 		JOptionPane.showMessageDialog(null, message.toString(), "Facture avec TVA", JOptionPane.INFORMATION_MESSAGE);
-
 	}
 
 	/**
@@ -463,23 +493,33 @@ public class ConsoleUI {
 		if (nom == null || nom.trim().isEmpty())
 			return null;
 
-		double prix = Double.parseDouble(JOptionPane.showInputDialog("Prix du " + type + " :"));
+		String prixStr = JOptionPane.showInputDialog("Prix du " + type + " :");
+		double prix;
+		try {
+			prix = Double.parseDouble(prixStr);
+		} catch (NumberFormatException e) {
+			JOptionPane.showMessageDialog(null, "Prix invalide.");
+			return null;
+		}
+
 		String description = JOptionPane.showInputDialog("Description :");
+
 		List<Ingredient> ingredients = new ArrayList<>();
 		int ajouter = JOptionPane.showConfirmDialog(null, "Souhaitez-vous ajouter des ingrédients à ce " + type + " ?");
 		if (ajouter == JOptionPane.YES_OPTION) {
 			List<Ingredient> tousLesIngredients = stockage.getIngredients();
 			if (tousLesIngredients.isEmpty()) {
-				JOptionPane.showMessageDialog(null, "Aucun ingrédient disponible pour ajouter !");
+				JOptionPane.showMessageDialog(null, "Aucun ingrédient disponible !");
 			} else {
 				boolean continuerAjout = true;
 				while (continuerAjout) {
 					StringBuilder sb = new StringBuilder("Ingrédients disponibles :\n");
-					for (Ingredient ingredient : tousLesIngredients) {
-						sb.append("- ").append(ingredient.getNom()).append("\n");
+					for (Ingredient ingr : tousLesIngredients) {
+						sb.append("- ").append(ingr.getNom()).append("\n");
 					}
 					String nomIngredient = JOptionPane.showInputDialog(null,
-							sb.toString() + "\nEntrez le nom d'un ingrédient à ajouter (ou vide pour terminer) :");
+							sb.toString() + "\nEntrez un ingrédient (ou vide pour terminer) :");
+
 					if (nomIngredient == null || nomIngredient.trim().isEmpty()) {
 						continuerAjout = false;
 					} else {
@@ -500,6 +540,7 @@ public class ConsoleUI {
 				}
 			}
 		}
+
 		boolean flag = false;
 		if (type.equalsIgnoreCase("Boisson")) {
 			int alcoolOption = JOptionPane.showConfirmDialog(null, "Est-ce une boisson alcoolisée ?");
@@ -640,4 +681,5 @@ public class ConsoleUI {
 		default -> new EspecePaiement();
 		};
 	}
+
 }
