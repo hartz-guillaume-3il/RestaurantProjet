@@ -19,3 +19,5 @@ Plat;Pizza;12.0;Chèvres miel;false
 Dessert;Pana cotta;4.5;Pana cotta avec coulis de fruit de saison;true
 Boisson;Virgin morito;6.5;Menthe fraîche;false
 Entrée;Curry wurst;12.0;Saucisse avec du curry et du pain;false
+Plat;Salade;12.0;salade;true
+Plat;soupe;5.5;soupe potiron;true
