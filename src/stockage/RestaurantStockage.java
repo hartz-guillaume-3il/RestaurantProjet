@@ -120,7 +120,7 @@ public class RestaurantStockage {
 		return ingredients;
 	}
 
-	private void sauvegarderIngredients() {
+	public void sauvegarderIngredients() {
 		try (BufferedWriter writer = new BufferedWriter(new FileWriter(fichierSauvegardeIngredients))) {
 			for (Ingredient ingredient : ingredients) {
 				writer.write(ingredient.getNom() + ";" + ingredient.getQuantiteStock() + ";" + ingredient.getUnite());
@@ -152,20 +152,30 @@ public class RestaurantStockage {
 		}
 	}
 
-	public void sauvegarderCommandes(List<Commande> commandes) {
+	public void sauvegarderCommandes() {
 		try (BufferedWriter writer = new BufferedWriter(new FileWriter(fichierSauvegardeCommandes))) {
-			for (Commande c : commandes) {
-				StringBuilder sb = new StringBuilder();
-				sb.append(c.getClient().getNom()).append(";").append(c.getClient().getTelephone()).append(";")
-						.append(c.getEtat().getNomEtat()).append(";");
+			for (Commande commande : commandes) {
+				StringBuilder ligne = new StringBuilder();
 
-				for (int i = 0; i < c.getItems().size(); i++) {
-					sb.append(c.getItems().get(i).getNom());
-					if (i != c.getItems().size() - 1)
-						sb.append(",");
+				String clientNom = (commande.getClient() != null) ? commande.getClient().getNom() : "inconnu";
+				String numeroTable = (commande.getTable() != null) ? String.valueOf(commande.getTable().getNumero())
+						: "0";
+				String montant = String.valueOf(commande.getMontantTotal());
+				String etat = commande.getEtat() != null ? commande.getEtat().getClass().getSimpleName()
+						: "NouvelleCommande";
+
+				ligne.append(commande.getId()).append(";").append(clientNom).append(";").append(numeroTable).append(";")
+						.append(montant).append(";").append(etat).append(";");
+
+				List<MenuItem> items = commande.getItems();
+				for (int i = 0; i < items.size(); i++) {
+					ligne.append(items.get(i).getNom());
+					if (i < items.size() - 1) {
+						ligne.append(",");
+					}
 				}
 
-				writer.write(sb.toString());
+				writer.write(ligne.toString());
 				writer.newLine();
 			}
 		} catch (IOException e) {
@@ -217,10 +227,20 @@ public class RestaurantStockage {
 		return null;
 	}
 
-	public void sauvegarderReservations(List<Reservation> reservations) {
+	public void sauvegarderReservations() {
 		try (BufferedWriter writer = new BufferedWriter(new FileWriter(fichierSauvegardeReservations))) {
-			for (Reservation r : reservations) {
-				writer.write(r.getNomClient() + ";" + r.getTelephone() + ";" + r.getTable().getNumero());
+			for (Reservation reservation : reservations) {
+				String nomClient = reservation.getNomClient() != null ? reservation.getNomClient() : "inconnu";
+				String dateHeureStr = (reservation.getDateHeure() != null)
+						? String.valueOf(reservation.getDateHeure().getTime())
+						: "0";
+				String telephoneStr = String.valueOf(reservation.getTelephone());
+				String nbPersonnesStr = String.valueOf(reservation.getNombrePersonnes());
+				String tableStr = (reservation.getTable() != null) ? String.valueOf(reservation.getTable().getNumero())
+						: "0";
+
+				writer.write(
+						nomClient + ";" + dateHeureStr + ";" + telephoneStr + ";" + nbPersonnesStr + ";" + tableStr);
 				writer.newLine();
 			}
 		} catch (IOException e) {

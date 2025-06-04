@@ -76,46 +76,50 @@ public class ConsoleUI {
 	 * Lancement de l'interface principale.
 	 */
 	public void lancer() {
-		UIManager.put("OptionPane.messageFont", new Font("Arial", Font.PLAIN, 14));
-		UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.BOLD, 13));
+	    UIManager.put("OptionPane.messageFont", new Font("Arial", Font.PLAIN, 14));
+	    UIManager.put("OptionPane.buttonFont", new Font("Arial", Font.BOLD, 13));
 
-		boolean continuer = true;
-		while (continuer) {
-			String[] options = { "Gérer les Réservations", "Gérer les Commandes", "Gérer le Menu", "Gérer le Personnel",
-					"Gérer les Ingrédients", "Quitter" };
-			int choix = JOptionPane.showOptionDialog(null,
-					"Bienvenue dans le Système de Gestion du Restaurant\n\nVeuillez sélectionner une option :",
-					"Menu Principal", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options,
-					options[0]);
+	    boolean continuer = true;
+	    while (continuer) {
+	        String[] options = {
+	            "Gérer les Réservations", 
+	            "Gérer les Commandes", 
+	            "Gérer le Menu", 
+	            "Gérer le Personnel",
+	            "Gérer les Ingrédients", 
+	            "Quitter"
+	        };
+	        
+	        int choix = JOptionPane.showOptionDialog(
+	            null,
+	            "Bienvenue dans le Système de Gestion du Restaurant\n\nVeuillez sélectionner une option :",
+	            "Menu Principal",
+	            JOptionPane.DEFAULT_OPTION,
+	            JOptionPane.INFORMATION_MESSAGE,
+	            null,
+	            options,
+	            options[0]
+	        );
 
-			switch (choix) {
-			case 0 -> gererReservations();
-			case 1 -> gererCommandes();
-			case 2 -> gererMenu();
-			case 3 -> gererPersonnel();
-			case 4 -> gererIngredients();
-			case 5, JOptionPane.CLOSED_OPTION -> continuer = false;
-			default -> continuer = false;
-			}
-		}
+	        switch (choix) {
+	            case 0 -> gererReservations();
+	            case 1 -> gererCommandes();
+	            case 2 -> gererMenu();
+	            case 3 -> gererPersonnel();
+	            case 4 -> gererIngredients();
+	            case 5, JOptionPane.CLOSED_OPTION -> continuer = false;
+	            default -> continuer = false;
+	        }
+	    }
 
-		stockage.sauvegarderPersonnel(personnel);
+	    stockage.sauvegarderPersonnel(personnel);
+	    stockage.sauvegarderReservations();
+	    stockage.sauvegarderCommandes();
+	    stockage.sauvegarderIngredients();
 
-		List<Reservation> reservations = new ArrayList<>();
-		for (Table table : tables) {
-			if (table.isOccupee()) {
-				Client client = trouverClientParTable(table);
-				if (client != null) {
-					reservations.add(new Reservation(client, table));
-				}
-			}
-		}
-		stockage.sauvegarderReservations(reservations);
-
-		stockage.sauvegarderCommandes(commandes);
-
-		JOptionPane.showMessageDialog(null, "Merci d'avoir utilisé notre système. Au revoir !");
+	    JOptionPane.showMessageDialog(null, "Merci d'avoir utilisé notre système. Au revoir !");
 	}
+
 
 	/**
 	 * Gestion du personnel (affichage, ajout, suppression).

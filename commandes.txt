@@ -1,5 +1,0 @@
-Jean Dupuis;0601020304;Nouvelle;
-Marie Martin;0605060708;Prête;
-Paul Durant;0603040506;Livrée;Pizza
-Sophie Leroy;0608091011;Nouvelle;
-Lucie Simon;0612131415;Nouvelle;

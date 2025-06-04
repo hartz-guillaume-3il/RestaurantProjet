@@ -1,38 +1,38 @@
-Saumon;180;g  
-Riz;100;g  
-Laitue;50;g  
-Tomate;80;g  
-Pain;120;g  
-Bœuf;220;g  
-Crevettes;160;g  
-Oeuf;90;g  
-Pâtes;140;g  
-Carotte;60;g  
-Courgette;70;g  
-Poivron;55;g  
-Champignon;65;g  
-Beurre;40;g  
-Crème;100;mL  
-Huile d'olive;30;mL  
-Sucre;20;g  
-Sel;10;g  
-Poivre;10;g  
-Ail;5;g  
-Basilic;5;g  
-Origan;5;g  
-Persil;5;g  
-Citron;20;g  
-Épinards;50;g  
-Avocat;80;g  
-Noix;40;g  
-Miel;30;g  
-Moutarde;20;g  
-Sauce soja;25;mL  
-Vinaigre balsamique;15;mL  
-Jambon;150;g  
-Chorizo;140;g  
-Mozzarella;130;g  
-Parmesan;120;g  
-Thon;180;g  
-Croutons;40;g  
+Saumon;180;g
+Riz;100;g
+Laitue;50;g
+Tomate;80;g
+Pain;120;g
+Bœuf;220;g
+Crevettes;160;g
+Oeuf;90;g
+Pâtes;140;g
+Carotte;60;g
+Courgette;70;g
+Poivron;55;g
+Champignon;65;g
+Beurre;40;g
+Crème;100;mL
+Huile d'olive;30;mL
+Sucre;20;g
+Sel;10;g
+Poivre;10;g
+Ail;5;g
+Basilic;5;g
+Origan;5;g
+Persil;5;g
+Citron;20;g
+Épinards;50;g
+Avocat;80;g
+Noix;40;g
+Miel;30;g
+Moutarde;20;g
+Sauce soja;25;mL
+Vinaigre balsamique;15;mL
+Jambon;150;g
+Chorizo;140;g
+Mozzarella;130;g
+Parmesan;120;g
+Thon;180;g
+Croutons;40;g
 Poulet;200;g
