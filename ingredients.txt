@@ -1,39 +1,38 @@
-Fromage;150;g
-Poulet;200;g
-Saumon;180;g
-Riz;100;g
-Laitue;50;g
-Tomate;80;g
-Pain;120;g
-Bœuf;220;g
-Crevettes;160;g
-Oeuf;90;pièces
-Pâtes;140;g
-Carotte;60;g
-Courgette;70;g
-Poivron;55;g
-Champignon;65;g
-Beurre;40;g
-Crème;100;ml
-Huile d'olive;30;ml
-Sucre;20;g
-Sel;10;g
-Poivre;10;g
-Ail;5;g
-Basilic;5;g
-Origan;5;g
-Persil;5;g
-Citron;20;g
-Épinards;50;g
-Avocat;80;g
-Noix;40;g
-Miel;30;g
-Moutarde;20;g
-Sauce soja;25;ml
-Vinaigre balsamique;15;ml
-Jambon;150;g
-Chorizo;140;g
-Mozzarella;130;g
-Parmesan;120;g
-Thon;180;g
-Croutons;40;g
+Saumon;180
+Riz;100
+Laitue;50
+Tomate;80
+Pain;120
+Bœuf;220
+Crevettes;160
+Oeuf;90
+Pâtes;140
+Carotte;60
+Courgette;70
+Poivron;55
+Champignon;65
+Beurre;40
+Crème;100
+Huile d'olive;30
+Sucre;20
+Sel;10
+Poivre;10
+Ail;5
+Basilic;5
+Origan;5
+Persil;5
+Citron;20
+Épinards;50
+Avocat;80
+Noix;40
+Miel;30
+Moutarde;20
+Sauce soja;25
+Vinaigre balsamique;15
+Jambon;150
+Chorizo;140
+Mozzarella;130
+Parmesan;120
+Thon;180
+Croutons;40
+Poulet;200
